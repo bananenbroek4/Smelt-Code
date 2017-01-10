@@ -1,0 +1,17 @@
+
+> { "moduleStartX": 0, "moduleStartY": 0, "moduleStartZ": 0, "moduleStopX": 15, "moduleStopY": 15, "moduleStopZ": 2, "moduleBorder": 1 }
+
+// -----------------------
+// -- potionStage --
+// -----------------------
+// Usage: 
+//> ROOT: !potionCollect <oldStage> <ingredient> <ingredientDamage> <consumptionCondition> <ingredientType>
+// IF <ingredientType> = item
+//> !potionCollect <oldStage> <ingredient> <ingredientDamage> <consumptionCondition> <ingredientType> <tags> <sound> <volume> <pitch> <resultItemTags>
+// ELSE IF <ingredientType> != item, assume potion is resulting item
+// !potionCollect <oldStage> <ingredient> <ingredientDamage> <consumptionCondition> <ingredientType> <resultItemTags>
+
+// -----------------------
+// -- potionStage --
+// -----------------------
+// Usage: !potionStage <newStage> <oldStage> <ingredient> <sound> <source> <volume> <pitch> <cC> <brewCooldown> <Explosions tag (use fireworks generator)>

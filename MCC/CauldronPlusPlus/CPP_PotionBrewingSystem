@@ -1,0 +1,47 @@
+
+> { "moduleStartX": 0, "moduleStartY": 0, "moduleStartZ": 0, "moduleStopX": 15, "moduleStopY": 15, "moduleStopZ": 2, "moduleBorder": 1 }
+
+// Usage: !potionStage <newStage> <oldStage> <ingredient> <sound> <volume> <pitch> <cC> <brewCooldown> <Explosions tag (use fireworks generator)>
+
+# CPP_PotionSYS
+	>{"type":"repeating-chain","auto":true}
+	/execute @e[name=cpp_cB,type=area_effect_cloud,tag=cpp_noPotion,score_cppCL=-1] ~ ~ ~ /testfor @e[type=item,dx=0,dy=1,dz=0] {Item:{id:"minecraft:water_bucket",Count:1b,Damage:0s}}
+	>{"conditional":true}
+		/execute @e[name=cpp_cB,type=area_effect_cloud,tag=cpp_noPotion,score_cppCL=0] ~ ~ ~ /scoreboard players tag @e[type=item,dx=0,dy=1,dz=0] add cpp_water_bucket {Item:{id:"minecraft:water_bucket",Count:1b,Damage:0s}}
+		/execute @e[name=cpp_cB,type=area_effect_cloud,tag=cpp_noPotion] ~ ~1 ~ /execute @e[type=item,tag=cpp_water_bucket,c=1,r=2] ~ ~-1 ~ /scoreboard players set @e[name=cpp_cB,type=area_effect_cloud,c=1,r=2,tag=cpp_noPotion] cppCC 11
+		/execute @e[name=cpp_cB,type=area_effect_cloud,tag=cpp_noPotion] ~ ~1 ~ /execute @e[type=item,tag=cpp_water_bucket,c=1,r=2] ~ ~-1 ~ /scoreboard players set @e[name=cpp_cB,type=area_effect_cloud,c=1,r=2,tag=cpp_noPotion,score_cppCL=0] cppCL 3
+		/execute @e[name=cpp_cB,type=area_effect_cloud,tag=cpp_noPotion] ~ ~1 ~ /execute @e[type=item,tag=cpp_water_bucket,c=1,r=2] ~ ~-1 ~ /scoreboard players tag @e[name=cpp_cB,type=area_effect_cloud,c=1,r=2,tag=cpp_noPotion] add cpp_colorUpdate
+		/execute @e[name=cpp_cB,type=area_effect_cloud,tag=cpp_noPotion] ~ ~1 ~ /execute @e[type=item,tag=cpp_water_bucket,c=1,r=2] ~ ~-1 ~ /execute @e[name=cpp_cB,type=area_effect_cloud,c=1,r=2] ~ ~ ~ /summon item ~ ~1 ~ {Item:{id:"minecraft:bucket",Count:1b,Damage:0},Tags:["cpp_DontUseBucket"]}
+		/execute @e[name=cpp_cB,type=area_effect_cloud,tag=cpp_noPotion] ~ ~1 ~ /execute @e[type=item,tag=cpp_water_bucket,c=1,r=2] ~ ~ ~ /playsound minecraft:item.bucket.fill ambient @a ~ ~ ~ 0.4 0.5
+		/execute @e[name=cpp_cB,type=area_effect_cloud,tag=cpp_noPotion] ~ ~1 ~ /execute @e[type=item,tag=cpp_water_bucket,c=1,r=2] ~ ~ ~ /kill @e[tag=cpp_water_bucket,type=item,c=1,r=2]
+	>{"conditional":false}
+
+	/execute @e[name=cpp_cB,type=area_effect_cloud,tag=cpp_noPotion,score_cppCL_min=1] ~ ~ ~ /testfor @e[type=item,dx=0,dy=1,dz=0] {Item:{id:"minecraft:glass_bottle",Count:1b,Damage:0s}}
+	>{"conditional":true}
+		/execute @e[name=cpp_cB,type=area_effect_cloud,tag=cpp_noPotion,score_cppCL_min=1] ~ ~ ~ /scoreboard players tag @e[type=item,dx=0,dy=1,dz=0] add cpp_glass_bottle {Item:{id:"minecraft:glass_bottle",Count:1b,Damage:0s}}
+		/execute @e[name=cpp_cB,type=area_effect_cloud,tag=cpp_noPotion,score_cppCL_min=1] ~ ~ ~ /execute @e[type=item,tag=cpp_glass_bottle,dx=0,dy=1,dz=0] ~ ~-1 ~ /scoreboard players remove @e[name=cpp_cB,type=area_effect_cloud,dx=0,dy=1,dz=0,tag=cpp_noPotion,score_cppCL_min=1] cppCL 1
+		/execute @e[name=cpp_cB,type=area_effect_cloud,tag=cpp_noPotion,score_cppCL_min=0] ~ ~ ~ /execute @e[type=item,tag=cpp_glass_bottle,dx=0,dy=1,dz=0] ~ ~-3 ~ /tp @e[name=cpp_cC,dx=0,dy=3,dz=0] ~ ~-.25 ~
+		/execute @e[name=cpp_cB,type=area_effect_cloud,tag=cpp_noPotion,score_cppCL_min=0] ~ ~1 ~ /execute @e[type=item,tag=cpp_glass_bottle,r=2] ~ ~-2 ~ /execute @e[name=cpp_cB,type=area_effect_cloud,r=2,c=1] ~ ~ ~ /summon item ~ ~1 ~ {Item:{id:"minecraft:potion",Count:1b,Damage:0,tag:{Potion:"minecraft:water"}}}
+		/execute @e[name=cpp_cB,type=area_effect_cloud,tag=cpp_noPotion,score_cppCL_min=0] ~ ~ ~ /execute @e[type=item,tag=cpp_glass_bottle,dx=0,dy=1,dz=0] ~ ~ ~ /playsound minecraft:item.bottle.fill ambient @a ~ ~ ~ 0.4 1.5
+		/execute @e[name=cpp_cB,type=area_effect_cloud,tag=cpp_noPotion] ~ ~ ~ /execute @e[type=item,tag=cpp_glass_bottle,dx=0,dy=2,dz=0] ~ ~ ~ /kill @e[tag=cpp_glass_bottle,type=item,r=2,c=1]
+	>{"conditional":false}
+
+	/execute @e[name=cpp_cB,type=area_effect_cloud,score_cppCL_min=1] ~ ~1 ~ /testfor @e[type=item,dx=0,dy=1,dz=0] {Item:{id:"minecraft:bucket",Count:1b,Damage:0s}}
+	>{"conditional":true}
+		/execute @e[name=cpp_cB,type=area_effect_cloud,score_cppCL_min=1] ~ ~1 ~ /scoreboard players tag @e[type=item,c=1,r=2,tag=!cpp_DontUseBucket] add cpp_bucket {Item:{id:"minecraft:bucket",Count:1b,Damage:0s}}
+		/execute @e[name=cpp_cB,type=area_effect_cloud,score_cppCL_min=1] ~ ~1 ~ /execute @e[type=item,tag=cpp_bucket,c=1,r=2] ~ ~-2 ~ /tp @e[name=cpp_cC,c=1,r=2] @e[name=cpp_cB,type=area_effect_cloud,c=1,r=3]
+		/execute @e[name=cpp_cB,type=area_effect_cloud,score_cppCL_min=1] ~ ~1 ~ /execute @e[type=item,tag=cpp_bucket,c=1,r=2] ~ ~-2 ~ /tp @e[name=cpp_cC,c=1,r=2] ~ ~ ~
+		/execute @e[name=cpp_cB,type=area_effect_cloud,score_cppCL_min=1] ~ ~1 ~ /execute @e[type=item,tag=cpp_bucket,c=1,r=2] ~ ~-1 ~ /scoreboard players set @e[name=cpp_cB,type=area_effect_cloud,c=1,r=2,score_cppCL_min=1] cppCL 0
+		/execute @e[name=cpp_cB,type=area_effect_cloud,score_cppCL_min=0] ~ ~1 ~ /execute @e[type=item,tag=cpp_bucket,c=1,r=2] ~ ~ ~ /playsound minecraft:item.bucket.empty ambient @a ~ ~ ~ 0.4 0.5
+		/execute @e[name=cpp_cB,type=area_effect_cloud] ~ ~ ~ /execute @e[type=item,tag=cpp_bucket,dx=0,dy=1,dz=0] ~ ~ ~ /scoreboard players tag @e[type=item,tag=cpp_bucket,c=1,r=1] add cpp_DontUseBucket
+		/execute @e[name=cpp_cB,type=area_effect_cloud] ~ ~ ~ /execute @e[type=item,tag=cpp_bucket,dx=0,dy=1,dz=0] ~ ~ ~ /scoreboard players tag @e[type=item,tag=cpp_bucket,c=1,r=1] remove cpp_bucket
+	>{"conditional":false}
+
+	/execute @e[name=cpp_cB,score_cppCL_min=0,score_cppCL=0] ~ ~-2 ~ /replaceitem entity @e[name=cpp_cC,type=armor_stand,dx=0,dy=3,dz=0] slot.armor.head air 1 0
+	/execute @e[name=cpp_cB,score_cppCL_min=0,score_cppCL=0] ~ ~-2 ~ /tp @e[name=cpp_cC,dx=0,dy=3,dz=0] @e[name=cpp_cB,dx=0,dy=3,dz=0]
+	/execute @e[name=cpp_cB,score_cppCL_min=0,score_cppCL=0] ~ ~-2 ~ /tp @e[name=cpp_cC,dx=0,dy=3,dz=0] ~ ~-1 ~
+	/entitydata @e[name=cpp_cB,score_cppCL_min=0,score_cppCL=0] {Tags:["cpp_noPotion","cpp_insideCauldron","cpp_cauldronPart"]}
+	/scoreboard players set @e[name=cpp_cB,score_cppCL_min=0,score_cppCL=0] cppCL -1
+	/scoreboard players remove @e[name=cpp_cB,score_cppBC_min=1,tag=cpp_hasHeat] cppBC 1
+	/execute @e[name=cpp_cB,score_cppBC_min=0,score_cppBC=0,tag=cpp_awkwardPotion] ~ ~ ~ /execute @e[name=cpp_cB,c=1,r=1,tag=cpp_hasHeat] ~ ~.5 ~ /particle lava ~ ~ ~ 0.2 0 0.2 1 1
+	/execute @e[name=cpp_cB,score_cppBC_min=0,score_cppBC=0,tag=cpp_hastePotion1] ~ ~ ~ /execute @e[name=cpp_cB,c=1,r=1,tag=cpp_hasHeat] ~ ~.5 ~ /particle fireworksSpark ~ ~ ~ 0.22 0.05 0.22 0.1 1

@@ -1,0 +1,31 @@
+
+> { "moduleStartX": 0, "moduleStartY": 0, "moduleStartZ": 0, "moduleStopX": 15, "moduleStopY": 15, "moduleStopZ": 2, "moduleBorder": 1 }
+
+// -----------------------
+// -- potionStage --
+// -----------------------
+// Usage: 
+//> ROOT: !potionCollect <oldStage> <ingredient> <ingredientDamage> <consumptionCondition> <ingredientType>
+// IF <ingredientType> = item
+//> !potionCollect <oldStage> <ingredient> <ingredientDamage> <consumptionCondition> <ingredientType> <tags> <sound> <volume> <pitch> <resultItemTags>
+// ELSE IF <ingredientType> != item, assume potion is resulting item
+// !potionCollect <oldStage> <ingredient> <ingredientDamage> <consumptionCondition> <ingredientType> <resultItemTags>
+
+// -----------------------
+// -- potionStage --
+// -----------------------
+// Usage: !potionStage <newStage> <oldStage> <ingredient> <sound> <source> <volume> <pitch> <cC> <brewCooldown> <Explosions tag (use fireworks generator)>
+
+
+# Potion_Haste
+>{"type":"repeating-chain","auto":true}
+	/searge
+	!potionStage awkwardPotion noPotion nether_wart 0 entity.ghast.shoot ambient 1 0.5 14 200 [{Type:0,Flicker:1,Trail:1,Colors:[16761600],FadeColors:[16742144,16711680,0]}]
+	!potionStage hastePotion1 awkwardPotion golden_pickaxe 0 item.shield.break ambient 0.4 1.5 8 200 [{Type:4,Flicker:1,Trail:0,Colors:[16777215],FadeColors:[16763025,8740401,0]}]
+	!potionStage hastePotion2 hastePotion1 tnt 0 entity.generic.explode ambient 0.5 1.5 10 200 
+	!potionStage hastePotion3 hastePotion2 redstone_torch 0 block.lava.extinguish ambient 1 1.5 2 200
+	!potionStage hastePotion4a hastePotion3 glowstone 0 block.glass.break ambient 0.8 1.5 4 400
+	!potionStage hastePotion4b hastePotion3 redstone_block 0 block.lava.extinguish ambient 1 0 1 400
+	!potionCollect hastePotion4a glass_bottle 0 1 potion {Item:{id:minecraft:potion,Count:1,Damage:0,tag:{Potion:"minecraft:water",CustomPotionColor:15582297,CustomPotionEffects:[{Id:3,Amplifier:0,Duration:4800}],display:{Name:"Potion%20of%20Haste"}}}}
+	!potionCollect hastePotion4b glass_bottle 0 1 potion {Item:{id:minecraft:potion,Count:1,Damage:0,tag:{Potion:"minecraft:water",CustomPotionColor:15582297,CustomPotionEffects:[{Id:3,Amplifier:1,Duration:1200}],display:{Name:"Potion%20of%20Haste"}}}}
+	!potionCollect hastePotion3 glass_bottle 0 1 potion {Item:{id:minecraft:potion,Count:1,Damage:0,tag:{Potion:"minecraft:water",CustomPotionColor:15582297,CustomPotionEffects:[{Id:3,Amplifier:0,Duration:2400}],display:{Name:"Potion%20of%20Haste"}}}}

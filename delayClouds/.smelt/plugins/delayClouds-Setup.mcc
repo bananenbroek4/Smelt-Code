@@ -1,0 +1,7 @@
+// Delay Clouds Setup
+// 		This Module is required to use the !delay plugin
+
+>{"type" : "repeating-chain"}
+	/scoreboard players tag @e[tag=dCloud] add dCloudAct {Age:-1}
+	/execute @e[tag=dCloudAct] ~ ~ ~ /blockdata ~ ~ ~ {auto:1b}
+	/execute @e[tag=dCloudAct] ~ ~ ~ /blockdata ~ ~ ~ {auto:0b}

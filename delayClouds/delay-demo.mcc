@@ -1,0 +1,23 @@
+//- - - - - - - - - - - - - - - - Delay plugin by VexSpectre - - - - - - - - - - - - - - - -
+//
+// Usage: !delay [delayDuration] <cmdBlockType> "<command>""
+//
+//		[delayDuration]: Delay duration in game ticks
+//		<cmdBlockType>: Case sensitive. Type of Command Block that's going to execute the command
+//						(impulse - repeating - chain)
+//  	"<command>": Command to execute after the delay. Keep the quotation marks.
+//
+// Example: !delay 60 impulse "/say 3 Seconds of delay, wow!"
+
+//This module creates a bomb timer sequence to demonstrate the !delay plugin working.
+
+#delayDemo
+>{"type":"impulse-chain","auto":true}
+	/tellraw @a [{"text":"\n"},{"text":"     !delay","color":"dark_red"},{"text":" plugin demo by ","color":"gold"},{"text":"VexSpectre","italic":true,"color":"gold"},{"text":"\n "}]
+	!delay 20 impulse "/playsound minecraft:block.anvil.land block @a ~ ~ ~ .3 .1"
+	/playsound minecraft:entity.creeper.primed block @a ~ ~ ~ .3 .5
+	!delay 20 impulse "/playsound minecraft:block.anvil.land block @a ~ ~ ~ .3 .6"
+	!delay 20 impulse "/playsound minecraft:block.anvil.land block @a ~ ~ ~ .5 1"
+	!delay 20 impulse "say Boom!"
+	/playsound minecraft:entity.lightning.impact block @a ~ ~ ~ 1 .8
+

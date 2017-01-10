@@ -1,0 +1,153 @@
+$markerEntityType=area_effect_cloud
+$transferPoint_X=25
+$transferPoint_Z=-9
+$markerTags=Duration:2147483647
+
+
+# System
+>{"type":"repeating-chain","auto":true}
+	/testfor @e[name=BH_Template,type=armor_stand]
+>{"conditional":true}
+	/testfor @e[name=BH_SpawnStructure,type=armor_stand,tag=!BH_TransferStructure]
+	/scoreboard players tag @e[name=BH_SpawnStructure,type=armor_stand,tag=!BH_TransferStructure] add BH_TransferStructure
+	!start_event+ BH_InitiateTransfer
+
+>{"type":"impulse-chain","conditional":false}
+	!event+ BH_InitiateTransfer
+	/execute @e[name=BH_SpawnStructure,tag=!BH_TransferredStructure] ~ ~ ~ /summon $markerEntityType ~ ~ ~ {CustomName:"BH_StructureSpawner",Small:1,Marker:1,NoGravity:1,Tags:["BH_AssignScores","BH_New"],Duration:100}
+	//scoreboard players tag @e[name=BH_SpawnStructure,tag=BH_TransferStructure] add BH_TransferredStructure
+	/execute @e[name=BH_Template] ~ ~ ~ detect ~ ~-1 ~ iron_block 0 /summon $markerEntityType ~ ~ ~ {CustomName:"BH_TemplateScanner",Small:1,Marker:1,NoGravity:1,Tags:["BH_AssignScores","BH_New"],Duration:100}
+
+	/execute @e[name=BH_TemplateScanner] ~ ~ ~ /clone ~ ~ ~ ~ ~100 ~ $transferPoint_X 0 $transferPoint_Z
+	/execute @e[name=BH_StructureSpawner] ~ ~ ~ /clone $transferPoint_X 0 $transferPoint_Z $transferPoint_X 100 $transferPoint_Z ~ ~ ~ masked move
+
+	/scoreboard players set @e[tag=BH_AssignScores] BH_X 0
+	/scoreboard players set @e[tag=BH_AssignScores,name=BH_StructureSpawner] BH_XHolder 0
+	/scoreboard players set @e[tag=BH_AssignScores] BH_Z 0
+	/scoreboard players set @e[tag=BH_AssignScores,name=BH_StructureSpawner] BH_ZHolder 0
+	!start_loop+ BH_ScannerSpawn
+
+# SpawnScannerLoop
+>{"type":"repeating-chain","auto":true}
+	!loop+ BH_ScannerSpawn
+
+	/scoreboard players tag @e[name=plugin_LoopMarker_BH_ScannerSpawn] remove BH_TemplateScannerPresence
+	/execute @e[name=BH_TemplateScanner] ~ ~ ~ /scoreboard players tag @e[name=plugin_LoopMarker_BH_ScannerSpawn] add BH_TemplateScannerPresence
+	/testfor @e[name=plugin_LoopMarker_BH_ScannerSpawn,tag=!BH_TemplateScannerPresence]
+>{"conditional":true}
+	!stop_loop+ BH_ScannerSpawn
+>{"conditional":false}	
+
+	/execute @e[name=BH_TemplateScanner,tag=BH_Old] ~ ~ ~ /kill @e[dx=0,name=BH_TemplateScanner,tag=BH_SpawnedIn]
+	/execute @e[name=BH_TemplateScanner,tag=BH_Old2] ~ ~ ~ /kill @e[dx=0,name=BH_TemplateScanner,tag=BH_SpawnedIn]
+	/execute @e[name=BH_StructureSpawner,tag=BH_Old] ~ ~ ~ /kill @e[dx=0,name=BH_StructureSpawner,tag=BH_SpawnedIn]
+	/execute @e[name=BH_StructureSpawner,tag=BH_Old2] ~ ~ ~ /kill @e[dx=0,name=BH_StructureSpawner,tag=BH_SpawnedIn]
+
+	/execute @e[name=BH_TemplateScanner,tag=BH_New] ~ ~ ~ /execute @e[r=0,c=1,tag=BH_SpawnedScanners] ~ ~ ~ /scoreboard players tag @e[name=plugin_LoopMarker_BH_ScannerSpawn] add BH_SpawningScanners
+	/execute @e[name=BH_TemplateScanner,tag=BH_New] ~ ~ ~ /execute @e[r=0,c=1,name=BH_TemplateScanner,tag=!BH_SpawnedScanners] ~ ~ ~ /scoreboard players tag @e[name=plugin_LoopMarker_BH_ScannerSpawn] remove BH_SpawningScanners
+>{"executeAs":"@e[name=plugin_LoopMarker_BH_ScannerSpawn,tag=BH_SpawningScanners]"}
+	/scoreboard players tag @e[tag=BH_Old] add BH_Old2
+	/scoreboard players tag @e[tag=BH_Old] remove BH_Old
+	/scoreboard players tag @e[tag=BH_New] add BH_Old
+	/scoreboard players tag @e[tag=BH_New] remove BH_New
+	/scoreboard players tag @e[tag=BH_SpawnedIn] add BH_New
+	/scoreboard players tag @e[tag=BH_SpawnedIn] remove BH_SpawnedIn
+>{"executeAs":""}
+	/execute @e[name=BH_TemplateScanner,tag=BH_Old] ~-1 ~ ~-1 /scoreboard players operation @e[tag=BH_New,dx=2,dz=2] BH_X = @e[dx=0,tag=BH_Old] BH_X
+	/execute @e[name=BH_TemplateScanner,tag=BH_Old] ~-1 ~ ~-1 /scoreboard players operation @e[tag=BH_New,dx=2,dz=2] BH_Z = @e[dx=0,tag=BH_Old] BH_Z
+	/execute @e[name=BH_TemplateScanner,tag=BH_Old] ~ ~ ~ /scoreboard players add @e[tag=BH_New,dx=1] BH_X 1
+	/execute @e[name=BH_TemplateScanner,tag=BH_Old] ~ ~ ~ /scoreboard players remove @e[tag=BH_New,dx=-1] BH_X 1
+	/execute @e[name=BH_TemplateScanner,tag=BH_Old] ~ ~ ~ /scoreboard players add @e[tag=BH_New,dz=1] BH_Z 1
+	/execute @e[name=BH_TemplateScanner,tag=BH_Old] ~ ~ ~ /scoreboard players remove @e[tag=BH_New,dz=-1] BH_Z 1
+
+	/execute @e[name=BH_StructureSpawner,tag=BH_Old] ~-1 ~ ~-1 /scoreboard players operation @e[tag=BH_New,dx=2,dz=2] BH_X = @e[dx=0,tag=BH_Old] BH_X
+	/execute @e[name=BH_StructureSpawner,tag=BH_Old] ~-1 ~ ~-1 /scoreboard players operation @e[tag=BH_New,dx=2,dz=2] BH_Z = @e[dx=0,tag=BH_Old] BH_Z
+	/execute @e[name=BH_StructureSpawner,tag=BH_Old] ~ ~ ~ /scoreboard players add @e[tag=BH_New,dx=1] BH_X 1
+	/execute @e[name=BH_StructureSpawner,tag=BH_Old] ~ ~ ~ /scoreboard players remove @e[tag=BH_New,dx=-1] BH_X 1
+	/execute @e[name=BH_StructureSpawner,tag=BH_Old] ~ ~ ~ /scoreboard players add @e[tag=BH_New,dz=1] BH_Z 1
+	/execute @e[name=BH_StructureSpawner,tag=BH_Old] ~ ~ ~ /scoreboard players remove @e[tag=BH_New,dz=-1] BH_Z 1
+
+	/execute @e[name=BH_TemplateScanner,tag=BH_New] ~ ~ ~ /scoreboard players tag @r[type=area_effect_cloud,name=BH_TemplateScanner,tag=!BH_SpawnedScanners,c=1,r=0] add BH_SpawnScanners
+	/scoreboard players tag @e[name=BH_TemplateScanner,tag=BH_SpawnScanners] add BH_SpawnedScanners
+
+	/execute @e[name=BH_StructureSpawner] ~ ~ ~ /scoreboard players operation @e[tag=BH_New,name=BH_StructureSpawner,dx=0 BH_XHolder = @e[tag=BH_New,name=BH_StructureSpawner,dx=0] BH_X
+	/execute @e[name=BH_StructureSpawner] ~ ~ ~ /scoreboard players operation @e[tag=BH_New,name=BH_StructureSpawner,dx=0] BH_ZHolder = @e[tag=BH_New,name=BH_StructureSpawner,dx=0] BH_Z
+	/scoreboard players operation @e[tag=BH_New,name=BH_StructureSpawner] BH_XHolder -= @e[tag=BH_SpawnScanners,name=BH_TemplateScanner] BH_X
+	/scoreboard players operation @e[tag=BH_New,name=BH_StructureSpawner] BH_ZHolder -= @e[tag=BH_SpawnScanners,name=BH_TemplateScanner] BH_Z
+
+	/execute @e[name=BH_TemplateScanner,tag=BH_SpawnScanners] ~ ~ ~ /scoreboard players tag @e[name=BH_StructureSpawner,score_BH_XHolder_min=0,score_BH_ZHolder_min=0,score_BH_XHolder=0,score_BH_ZHolder=0] add BH_SpawnScanners
+
+
+	/execute @e[tag=BH_SpawnScanners,name=BH_TemplateScanner] ~ ~ ~ detect ~1 ~-1 ~ iron_block * /summon $markerEntityType ~1 ~ ~ {CustomName:"BH_TemplateScanner",Duration:100,Tags:["BH_SpawnedIn"]}
+	/execute @e[tag=BH_SpawnScanners,name=BH_TemplateScanner] ~ ~ ~ detect ~-1 ~-1 ~ iron_block * /summon $markerEntityType ~-1 ~ ~ {CustomName:"BH_TemplateScanner",Duration:100,Tags:["BH_SpawnedIn"]}
+	/execute @e[tag=BH_SpawnScanners,name=BH_TemplateScanner] ~ ~ ~ detect ~ ~-1 ~1 iron_block * /summon $markerEntityType ~ ~ ~1 {CustomName:"BH_TemplateScanner",Duration:100,Tags:["BH_SpawnedIn"]}
+	/execute @e[tag=BH_SpawnScanners,name=BH_TemplateScanner] ~ ~ ~ detect ~ ~-1 ~-1 iron_block * /summon $markerEntityType ~ ~ ~-1 {CustomName:"BH_TemplateScanner",Duration:100,Tags:["BH_SpawnedIn"]}
+
+	/execute @e[tag=BH_SpawnScanners,name=BH_StructureSpawner] ~ ~ ~ /summon $markerEntityType ~1 ~ ~ {CustomName:"BH_StructureSpawner",Duration:100,Tags:["BH_SpawnedIn"]}
+	/execute @e[tag=BH_SpawnScanners,name=BH_StructureSpawner] ~ ~ ~ /summon $markerEntityType ~-1 ~ ~ {CustomName:"BH_StructureSpawner",Duration:100,Tags:["BH_SpawnedIn"]}
+	/execute @e[tag=BH_SpawnScanners,name=BH_StructureSpawner] ~ ~ ~ /summon $markerEntityType ~ ~ ~1 {CustomName:"BH_StructureSpawner",Duration:100,Tags:["BH_SpawnedIn"]}
+	/execute @e[tag=BH_SpawnScanners,name=BH_StructureSpawner] ~ ~ ~ /summon $markerEntityType ~ ~ ~-1 {CustomName:"BH_StructureSpawner",Duration:100,Tags:["BH_SpawnedIn"]}
+
+	/execute @e[name=BH_TemplateScanner,tag=BH_SpawnScanners] ~ ~ ~ /clone ~ ~ ~ ~ 255 ~ $transferPoint_X 0 $transferPoint_Z
+	/execute @e[tag=BH_SpawnScanners,name=BH_StructureSpawner] ~ ~ ~ /clone $transferPoint_X 0 $transferPoint_Z $transferPoint_X 255 $transferPoint_Z ~ ~ ~ masked move
+	
+	/scoreboard players tag @e[tag=BH_SpawnScanners] remove BH_SpawnScanners
+
+/*
+# StructureTransfer
+>{"type":"repeating-chain","auto":true}
+	!loop+ BH_StructureTransfer
+
+	/title @p times 1 1 1
+	/title @p actionbar [{"text":"Looping"}]
+
+	/scoreboard players tag @e[name=plugin_LoopMarker_BH_StructureTransfer] remove BH_NoTemplateScannersLeft
+	/execute @e[name=BH_TemplateScanner] ~ ~ ~ /scoreboard players tag @e[name=plugin_LoopMarker_BH_StructureTransfer] add BH_NoTemplateScannersLeft
+	/testfor @e[name=plugin_LoopMarker_BH_StructureTransfer,tag=!BH_NoTemplateScannersLeft]
+>{"conditional":true}
+	!stop_loop+ BH_StructureTransfer
+>{"conditional":false}
+
+	/scoreboard players tag @r[name=BH_TemplateScanner,type=area_effect_cloud,tag=!BH_HasTransferred] add BH_AssignTransferTags
+
+	/execute @e[tag=BH_AssignTransferTags] ~-1 ~ ~-1 	/scoreboard players operation @e[tag=BH_New,dx=2,dz=2] BH_X = @e[dx=0,tag=BH_AssignTransferTags] BH_X
+	/execute @e[tag=BH_AssignTransferTags] ~-1 ~ ~-1 	/scoreboard players operation @e[tag=BH_New,dx=2,dz=2] BH_Z = @e[dx=0,tag=BH_AssignTransferTags] BH_Z
+	/execute @e[tag=BH_AssignTransferTags] ~ ~ ~ 		/scoreboard players add @e[tag=BH_New,dx=1] 		BH_X 1
+	/execute @e[tag=BH_AssignTransferTags] ~ ~ ~ 		/scoreboard players remove @e[tag=BH_New,dx=-1] 	BH_X 1
+	/execute @e[tag=BH_AssignTransferTags] ~ ~ ~ 		/scoreboard players add @e[tag=BH_New,dz=1] 		BH_Z 1
+	/execute @e[tag=BH_AssignTransferTags] ~ ~ ~ 		/scoreboard players remove @e[tag=BH_New,dz=-1] 	BH_Z 1
+
+	/scoreboard players operation @e[tag=BH_New,name=BH_StructureSpawner] BH_XHolder = @e[tag=BH_New,name=BH_StructureSpawner] BH_X
+	/scoreboard players operation @e[tag=BH_New,name=BH_StructureSpawner] BH_ZHolder = @e[tag=BH_New,name=BH_StructureSpawner] BH_Z
+	/scoreboard players operation @e[tag=BH_New,name=BH_StructureSpawner] BH_XHolder -= @e[tag=BH_AssignTransferTags,name=BH_TemplateScanner] BH_X
+	/scoreboard players operation @e[tag=BH_New,name=BH_StructureSpawner] BH_ZHolder -= @e[tag=BH_AssignTransferTags,name=BH_TemplateScanner] BH_Z
+
+	/execute @e[name=BH_TemplateScanner,tag=BH_HasTransferred] ~ ~ ~ /clone ~ ~ ~ ~ 255 ~ $transferPoint_X 0 $transferPoint_Z
+	/execute @e[tag=BH_New,name=BH_StructureSpawner,score_BH_XHolder_min=0,score_BH_ZHolder_min=0,score_BH_XHolder=0,score_BH_ZHolder=0] ~ ~ ~ /clone $transferPoint_X 0 $transferPoint_Z $transferPoint_X 255 $transferPoint_Z ~ ~ ~ masked move
+	
+	/scoreboard players reset @e[score_BH_XHolder_min=0,score_BH_ZHolder_min=0,score_BH_XHolder=0,score_BH_ZHolder=0] BH_XHolder
+	/scoreboard players reset @e[score_BH_XHolder_min=0,score_BH_ZHolder_min=0,score_BH_XHolder=0,score_BH_ZHolder=0] BH_ZHolder
+
+	/scoreboard players tag @e[tag=BH_New,score_BH_XHolder_min=0,score_BH_ZHolder_min=0,score_BH_XHolder=0,score_BH_ZHolder=0] remove BH_New
+
+
+	/execute @e[tag=BH_AssignTransferTags,name=BH_TemplateScanner] ~ ~ ~ detect ~1 ~-1 ~ iron_block 0 /summon $markerEntityType ~1 ~ ~ 	{CustomName:"BH_TemplateScanner",Duration:100,Tags:["BH_New"]}
+	/execute @e[tag=BH_AssignTransferTags,name=BH_TemplateScanner] ~ ~ ~ detect ~-1 ~-1 ~ iron_block 0 /summon $markerEntityType ~-1 ~ ~ 	{CustomName:"BH_TemplateScanner",Duration:100,Tags:["BH_New"]}
+	/execute @e[tag=BH_AssignTransferTags,name=BH_TemplateScanner] ~ ~ ~ detect ~ ~-1 ~1 iron_block 0 /summon $markerEntityType ~ ~ ~1 	{CustomName:"BH_TemplateScanner",Duration:100,Tags:["BH_New"]}
+	/execute @e[tag=BH_AssignTransferTags,name=BH_TemplateScanner] ~ ~ ~ detect ~ ~-1 ~-1 iron_block 0 /summon $markerEntityType ~ ~ ~-1 	{CustomName:"BH_TemplateScanner",Duration:100,Tags:["BH_New"]}
+	/execute @e[tag=BH_AssignTransferTags,name=BH_StructureSpawner] ~ ~ ~ /summon $markerEntityType ~1 ~ ~ 		{CustomName:"BH_TemplateScanner",Duration:2,Tags:["BH_New"]}
+	/execute @e[tag=BH_AssignTransferTags,name=BH_StructureSpawner] ~ ~ ~ /summon $markerEntityType ~-1 ~ ~ 	{CustomName:"BH_TemplateScanner",Duration:2,Tags:["BH_New"]}
+	/execute @e[tag=BH_AssignTransferTags,name=BH_StructureSpawner] ~ ~ ~ /summon $markerEntityType ~ ~ ~1 		{CustomName:"BH_TemplateScanner",Duration:2,Tags:["BH_New"]}
+	/execute @e[tag=BH_AssignTransferTags,name=BH_StructureSpawner] ~ ~ ~ /summon $markerEntityType ~ ~ ~-1 	{CustomName:"BH_TemplateScanner",Duration:2,Tags:["BH_New"]}
+	/execute @e[tag=BH_Old] ~ ~ ~ /kill @e[tag=BH_New,dx=0]
+
+
+	
+
+	/scoreboard players tag @e[tag=BH_AssignTransferTags] add 		BH_HasTransferred
+	/scoreboard players tag @e[tag=BH_AssignTransferTags] remove 	BH_AssignTransferTags
+
+*/
+
+	// ### Order of events ###
+	// 1. Every TemplateScanner and StructureSpawner spawn armorstand to each side

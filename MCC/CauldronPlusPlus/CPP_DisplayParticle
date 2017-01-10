@@ -1,0 +1,18 @@
+> { "moduleStartX": 0, "moduleStartY": 0, "moduleStartZ": 0, "moduleStopX": 15, "moduleStopY": 15, "moduleStopZ": 2, "moduleBorder": 1 }
+
+# CPP_DisplayParticle
+>{"type":"impulse-chain","auto":true}
+	!event+ CPP_DisplayParticle
+	/execute @e[score_cppCC_min=0,score_cppCC=0,name=cpp_cB,type=area_effect_cloud,tag=cpp_hasHeat,score_cppCL_min=1] ~ ~-2 ~ /execute @e[name=cpp_cC,type=armor_stand,dx=0,dy=2,dz=0] ~ ~ ~ /particle spell ~ ~1.6 ~ .22 0 .22 0 2
+	/execute @e[score_cppCC_min=1,score_cppCC=1,name=cpp_cB,type=area_effect_cloud,tag=cpp_hasHeat,score_cppCL_min=1] ~ ~-2 ~ /execute @e[name=cpp_cC,type=armor_stand,dx=0,dy=2,dz=0] ~ ~ ~ /particle mobSpellAmbient ~ ~1.6 ~ .22 0 .22 0 2
+	/execute @e[score_cppCC_min=2,score_cppCC=2,name=cpp_cB,type=area_effect_cloud,tag=cpp_hasHeat,score_cppCL_min=1] ~ ~-2 ~ /execute @e[name=cpp_cC,type=armor_stand,dx=0,dy=2,dz=0] ~ ~ ~ /particle witchMagic ~ ~1.6 ~ .22 0 .22 0 2
+	/execute @e[score_cppCC_min=3,score_cppCC=3,name=cpp_cB,type=area_effect_cloud,tag=cpp_hasHeat,score_cppCL_min=1] ~ ~-2 ~ /execute @e[name=cpp_cC,type=armor_stand,dx=0,dy=2,dz=0] ~ ~ ~ /particle magicCrit ~ ~1.6 ~ .22 0 .22 0 2
+	/execute @e[score_cppCC_min=4,score_cppCC=4,name=cpp_cB,type=area_effect_cloud,tag=cpp_hasHeat,score_cppCL_min=1] ~ ~-2 ~ /execute @e[name=cpp_cC,type=armor_stand,dx=0,dy=2,dz=0] ~ ~ ~ /particle crit ~ ~1.6 ~ .22 0 .22 0 2
+	/execute @e[score_cppCC_min=5,score_cppCC=5,name=cpp_cB,type=area_effect_cloud,tag=cpp_hasHeat,score_cppCL_min=1] ~ ~-2 ~ /execute @e[name=cpp_cC,type=armor_stand,dx=0,dy=2,dz=0] ~ ~ ~ /particle happyVillager ~ ~1.6 ~ .22 0 .22 0 1
+	/execute @e[score_cppCC_min=7,score_cppCC=7,name=cpp_cB,type=area_effect_cloud,tag=cpp_hasHeat,score_cppCL_min=1] ~ ~-2 ~ /execute @e[name=cpp_cC,type=armor_stand,dx=0,dy=2,dz=0] ~ ~ ~ /particle depthsuspend ~ ~1.6 ~ .22 0 .22 0 2
+	/execute @e[score_cppCC_min=8,score_cppCC=8,name=cpp_cB,type=area_effect_cloud,tag=cpp_hasHeat,score_cppCL_min=1] ~ ~-2 ~ /execute @e[name=cpp_cC,type=armor_stand,dx=0,dy=2,dz=0] ~ ~ ~ /particle enchantmenttable ~ ~1.6 ~ .22 0 .22 0 2
+	/execute @e[score_cppCC_min=10,score_cppCC=10,name=cpp_cB,type=area_effect_cloud,tag=cpp_hasHeat,score_cppCL_min=1] ~ ~-2 ~ /execute @e[name=cpp_cC,type=armor_stand,dx=0,dy=2,dz=0] ~ ~ ~ /particle dragonbreath ~ ~1.6 ~ .22 0 .22 0 2
+	/execute @e[score_cppCC_min=11,score_cppCC=11,name=cpp_cB,type=area_effect_cloud,tag=cpp_hasHeat,score_cppCL_min=1] ~ ~-2 ~ /execute @e[name=cpp_cC,type=armor_stand,dx=0,dy=2,dz=0] ~ ~ ~ /particle wake ~ ~1.6 ~ .22 0 .22 0 2
+	/execute @e[score_cppCC_min=13,score_cppCC=13,name=cpp_cB,type=area_effect_cloud,tag=cpp_hasHeat,score_cppCL_min=1] ~ ~-2 ~ /execute @e[name=cpp_cC,type=armor_stand,dx=0,dy=2,dz=0] ~ ~ ~ /particle slime ~ ~1.6 ~ .22 0 .22 0 2
+	/execute @e[score_cppCC_min=14,score_cppCC=14,name=cpp_cB,type=area_effect_cloud,tag=cpp_hasHeat,score_cppCL_min=1] ~ ~-2 ~ /execute @e[name=cpp_cC,type=armor_stand,dx=0,dy=2,dz=0] ~ ~ ~ /particle flame ~ ~1.6 ~ .22 0 .22 0 1
+	/execute @e[score_cppCC_min=15,score_cppCC=15,name=cpp_cB,type=area_effect_cloud,tag=cpp_hasHeat,score_cppCL_min=1] ~ ~-2 ~ /execute @e[name=cpp_cC,type=armor_stand,dx=0,dy=2,dz=0] ~ ~ ~ /particle smoke ~ ~1.6 ~ .22 0 .22 0 2

@@ -1,0 +1,19 @@
+> { "moduleStartX": 0, "moduleStartY": 0, "moduleStartZ": 0, "moduleStopX": 15, "moduleStopY": 15, "moduleStopZ": 2, "moduleBorder": 1 }
+
+# CPP_ColorUpdate
+>{"type":"impulse-chain","auto":true}
+	!event+ CPP_ColorUpdate
+	/execute @e[score_cppCC_min=0,score_cppCC=0,name=cpp_cB,type=area_effect_cloud,tag=cpp_colorUpdate] ~ ~-2 ~ /replaceitem entity @e[name=cpp_cC,type=armor_stand,dx=0,dy=2,dz=0] slot.armor.head stained_glass 1 0
+	/execute @e[score_cppCC_min=1,score_cppCC=1,name=cpp_cB,type=area_effect_cloud,tag=cpp_colorUpdate] ~ ~-2 ~ /replaceitem entity @e[name=cpp_cC,type=armor_stand,dx=0,dy=2,dz=0] slot.armor.head stained_glass 1 1
+	/execute @e[score_cppCC_min=2,score_cppCC=2,name=cpp_cB,type=area_effect_cloud,tag=cpp_colorUpdate] ~ ~-2 ~ /replaceitem entity @e[name=cpp_cC,type=armor_stand,dx=0,dy=2,dz=0] slot.armor.head stained_glass 1 2
+	/execute @e[score_cppCC_min=3,score_cppCC=3,name=cpp_cB,type=area_effect_cloud,tag=cpp_colorUpdate] ~ ~-2 ~ /replaceitem entity @e[name=cpp_cC,type=armor_stand,dx=0,dy=2,dz=0] slot.armor.head stained_glass 1 3
+	/execute @e[score_cppCC_min=4,score_cppCC=4,name=cpp_cB,type=area_effect_cloud,tag=cpp_colorUpdate] ~ ~-2 ~ /replaceitem entity @e[name=cpp_cC,type=armor_stand,dx=0,dy=2,dz=0] slot.armor.head stained_glass 1 4
+	/execute @e[score_cppCC_min=5,score_cppCC=5,name=cpp_cB,type=area_effect_cloud,tag=cpp_colorUpdate] ~ ~-2 ~ /replaceitem entity @e[name=cpp_cC,type=armor_stand,dx=0,dy=2,dz=0] slot.armor.head stained_glass 1 5
+	/execute @e[score_cppCC_min=7,score_cppCC=7,name=cpp_cB,type=area_effect_cloud,tag=cpp_colorUpdate] ~ ~-2 ~ /replaceitem entity @e[name=cpp_cC,type=armor_stand,dx=0,dy=2,dz=0] slot.armor.head stained_glass 1 7
+	/execute @e[score_cppCC_min=8,score_cppCC=8,name=cpp_cB,type=area_effect_cloud,tag=cpp_colorUpdate] ~ ~-2 ~ /replaceitem entity @e[name=cpp_cC,type=armor_stand,dx=0,dy=2,dz=0] slot.armor.head stained_glass 1 8
+	/execute @e[score_cppCC_min=10,score_cppCC=10,name=cpp_cB,type=area_effect_cloud,tag=cpp_colorUpdate] ~ ~-2 ~ /replaceitem entity @e[name=cpp_cC,type=armor_stand,dx=0,dy=2,dz=0] slot.armor.head stained_glass 1 10
+	/execute @e[score_cppCC_min=11,score_cppCC=11,name=cpp_cB,type=area_effect_cloud,tag=cpp_colorUpdate] ~ ~-2 ~ /replaceitem entity @e[name=cpp_cC,type=armor_stand,dx=0,dy=2,dz=0] slot.armor.head stained_glass 1 11
+	/execute @e[score_cppCC_min=13,score_cppCC=13,name=cpp_cB,type=area_effect_cloud,tag=cpp_colorUpdate] ~ ~-2 ~ /replaceitem entity @e[name=cpp_cC,type=armor_stand,dx=0,dy=2,dz=0] slot.armor.head stained_glass 1 13
+	/execute @e[score_cppCC_min=14,score_cppCC=14,name=cpp_cB,type=area_effect_cloud,tag=cpp_colorUpdate] ~ ~-2 ~ /replaceitem entity @e[name=cpp_cC,type=armor_stand,dx=0,dy=2,dz=0] slot.armor.head stained_glass 1 14
+	/execute @e[score_cppCC_min=15,score_cppCC=15,name=cpp_cB,type=area_effect_cloud,tag=cpp_colorUpdate] ~ ~-2 ~ /replaceitem entity @e[name=cpp_cC,type=armor_stand,dx=0,dy=2,dz=0] slot.armor.head stained_glass 1 15
+	/scoreboard players tag @e[name=cpp_cB,type=area_effect_cloud,tag=cpp_colorUpdate] remove cpp_colorUpdate

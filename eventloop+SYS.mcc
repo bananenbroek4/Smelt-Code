@@ -1,0 +1,4 @@
+# SYS
+>{"type":"repeating-chain","auto":true}
+	/scoreboard players tag @e[tag=eventloop+] remove SpawnedIn
+	/execute @e[tag=eventloop+,type=area_effect_cloud] ~ ~ ~ detect ~ ~ ~ air * /kill @e[tag=eventloop+,type=area_effect_cloud,c=1,r=0]

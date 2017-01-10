@@ -1,0 +1,35 @@
+/*
+
+	The system controls cauldron creation timers, water levels, item detection and color change.
+
+*/
+
+> { "moduleStartX": 0, "moduleStartY": 0, "moduleStartZ": 0, "moduleStopX": 15, "moduleStopY": 15, "moduleStopZ": 2, "moduleBorder": 1 }
+
+# CPP_System
+>{"type":"repeating-chain","auto":true}
+	/execute @e[name=cpp_cB,type=area_effect_cloud] ~-2 ~ ~-2 /scoreboard players tag @e[type=item,dx=4,dy=4,dz=4,tag=!cpp_cannotSpawn] add cpp_cannotSpawn
+	/execute @e[type=item,tag=!cpp_cannotSpawn] ~ ~ ~ detect ~ ~-1 ~ cauldron * /scoreboard players tag @e[type=item,r=0,c=1,tag=!cpp_spawnCauldron] add cpp_canSpawn {Item:{id:"minecraft:nether_star",Count:1b,Damage:0s}}
+	>{"conditional":true}
+		!start_event+ CPP_CreateCauldron
+	>{"conditional":false}
+	/scoreboard players tag @e[name=cpp_cB,type=area_effect_cloud,tag=cpp_insideCauldron] remove cpp_insideCauldron
+	/execute @e[name=cpp_cB,type=area_effect_cloud] ~ ~ ~ detect ~ ~ ~ cauldron * /scoreboard players tag @e[name=cpp_cB,c=1,r=0] add cpp_insideCauldron
+	/testfor @e[name=cpp_cB,type=area_effect_cloud,tag=!cpp_insideCauldron]
+	>{"conditional":true}
+		!start_event+ CPP_DestroyCauldron
+	>{"conditional":false}
+	/scoreboard players tag @e[name=cpp_cB,tag=cpp_hasHeat] remove cpp_hasHeat
+	/execute @e[name=cpp_cB] ~ ~ ~ detect ~ ~-1 ~ lava * /scoreboard players tag @e[name=cpp_cB,type=area_effect_cloud,c=1,r=0] add cpp_hasHeat
+	/execute @e[name=cpp_cB] ~ ~ ~ detect ~ ~-1 ~ flowing_lava * /scoreboard players tag @e[name=cpp_cB] add cpp_hasHeat
+	/execute @e[name=cpp_cB] ~ ~ ~ detect ~ ~-1 ~ fire * /scoreboard players tag @e[name=cpp_cB,type=area_effect_cloud,c=1,r=0] add cpp_hasHeat
+	//testfor @e[name=cpp_cB,tag=cpp_hasHeat]
+	/execute @e[name=cpp_cB,type=area_effect_cloud,score_cppCL_min=0,score_cppCL=0] ~ ~-2 ~ /tp @e[name=cpp_cC,type=armor_stand,dx=0,dy=3,dz=0] ~ ~.5 ~
+	/testfor @e[name=cpp_cB,type=area_effect_cloud,score_cppCL_min=1]
+	>{"conditional":true}
+		!start_event+ CPP_DisplayParticle
+	>{"conditional":false}
+	/testfor @e[name=cpp_cB,type=area_effect_cloud,tag=cpp_colorUpdate]
+	>{"conditional":true}
+		!start_event+ CPP_ColorUpdate
+	>{"conditional":false}

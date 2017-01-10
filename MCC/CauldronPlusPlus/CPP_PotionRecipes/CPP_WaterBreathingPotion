@@ -1,0 +1,26 @@
+
+> { "moduleStartX": 0, "moduleStartY": 0, "moduleStartZ": 0, "moduleStopX": 15, "moduleStopY": 15, "moduleStopZ": 2, "moduleBorder": 1 }
+
+// -----------------------
+// -- potionStage --
+// -----------------------
+// Usage: 
+//> ROOT: !potionCollect <oldStage> <ingredient> <ingredientDamage> <consumptionCondition> <ingredientType>
+// IF <ingredientType> = item
+//> !potionCollect <oldStage> <ingredient> <ingredientDamage> <consumptionCondition> <ingredientType> <tags> <sound> <volume> <pitch> <resultItemTags>
+// ELSE IF <ingredientType> != item, assume potion is resulting item
+// !potionCollect <oldStage> glass_bottle 0 <consumptionCondition> potion <resultItemTags>
+
+// -----------------------
+// -- potionStage --
+// -----------------------
+// Usage: !potionStage <newStage> <oldStage> <ingredient> <ingredientDamage> <sound> <source> <volume> <pitch> <cC> <brewCooldown> <Explosions tag (use fireworks generator)>
+
+>{"type":"repeating-chain","auto":true}
+	/searge
+	!potionStage watBrePot1 awkwardPotion fish 2 entity.generic.splash ambient 0.5 2 3 400
+	!potionStage watBrePot2 watBrePot1 prismarine_shard 0 block.glass.break ambient 0.4 2 0 200
+	!potionStage watBrePot3 watBrePot2 waterlily 0 block.waterlily.place ambient 0.5 1.5 13 400
+	!potionStage watBrePot4a watBrePot3 redstone_block 0 block.lava.extinguish ambient 1 0 1 800
+	!potionCollect watBrePot3 glass_bottle 0 1 potion {Item:{id:minecraft:potion,Count:1,Damage:0,tag:{Potion:"minecraft:water",CustomPotionColor:426544,CustomPotionEffects:[{Id:13,Amplifier:0,Duration:12000}],display:{Name:"Potion%20of%20Water%20Breathing"}}}}
+	!potionCollect watBrePot4a glass_bottle 0 1 potion {Item:{id:minecraft:potion,Count:1,Damage:0,tag:{Potion:"minecraft:water",CustomPotionColor:426544,CustomPotionEffects:[{Id:13,Amplifier:0,Duration:24000}],display:{Name:"Potion%20of%20Water%20Breathing"}}}}

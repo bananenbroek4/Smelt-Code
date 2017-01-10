@@ -1,0 +1,9 @@
+> { "moduleStartX": 0, "moduleStartY": 0, "moduleStartZ": 0, "moduleStopX": 15, "moduleStopY": 15, "moduleStopZ": 2, "moduleBorder": 1 }
+
+# CPP_DestroyCauldron
+>{"type":"impulse-chain","auto":true}
+	!event+ CPP_DestroyCauldron
+	/execute @e[name=cpp_cB,type=area_effect_cloud,tag=!cpp_insideCauldron] ~ ~ ~ /particle witchMagic ~ ~ ~ .3 .3 .3 15 0
+	//execute @e[name=cpp_cB,type=area_effect_cloud,tag=!cpp_insideCauldron] ~ ~ ~ /tellraw @a[r=5] [{"text":"[","color":"gray"},{"text":"Cauldron++","color":"red"},{"text":"]: ","color":"gray"},{"text":"You destroyed a magic cauldron","color":"dark_purple"}]
+	/execute @e[name=cpp_cB,type=area_effect_cloud,tag=!cpp_insideCauldron] ~ ~ ~ /summon item ~ ~ ~ {Item:{id:"nether_star",Count:1b,Damage:0},NoGravity:1b,Invulnerable:1b}
+	/execute @e[name=cpp_cB,type=area_effect_cloud,tag=!cpp_insideCauldron] ~ ~-2 ~ /kill @e[tag=cpp_cauldronPart,dx=0,dy=3,dz=0]
