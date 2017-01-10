@@ -34,7 +34,7 @@ $cloneFromZ=	-9
 >{"type":"repeating-chain","auto":true}
 !loop+ BHExpand
 	//say CYCLE
-
+	/scoreboard players tag @e[name=BH_TemplateScanner,type=area_effect_cloud,tag=BHSpawnedScanners] remove BHSpawnScanners
 	// Calculate relative template coordinates
 	/execute @e[name=BH_TemplateScanner,tag=BHOld] ~ ~ ~ /scoreboard players operation @e[r=2,name=BH_TemplateScanner,tag=BHSpawnScanners] BH_X = @e[name=BH_TemplateScanner,tag=BHOld,c=1,r=0] BH_X
 	/execute @e[name=BH_TemplateScanner,tag=BHOld] ~ ~ ~ /scoreboard players operation @e[r=2,name=BH_TemplateScanner,tag=BHSpawnScanners] BH_Z = @e[name=BH_TemplateScanner,tag=BHOld,c=1,r=0] BH_Z
