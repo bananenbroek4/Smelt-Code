@@ -1,0 +1,80 @@
+$cloneToX=		25
+$cloneToZ=		-9
+$cloneFromX=	25
+$cloneFromZ=	-9
+
+>{"type":"repeating-chain","auto":false}
+
+!loop+  BHExpand
+	>{"type":"chain","auto":true}
+	/scoreboard players tag @e[name=BH_TemplateScanner,tag=BHCanSpawnScanners] remove BHCanSpawnScanners
+	/execute @e[name=BH_TemplateScanner,tag=BHNew] ~ ~ ~ /scoreboard players tag @e[name=BH_TemplateScanner,tag=!BHSpawnedScanners,c=1,r=0] add BHCanSpawnScanners
+	/scoreboard players tag @e[name=BH_TemplateScanner,type=area_effect_cloud,tag=BHCanSpawnScanners] add BHSpawnScanners
+
+	// Calculate relative template coordinates
+	/execute @e[name=BH_TemplateScanner,tag=BHOld] ~ ~ ~ /scoreboard players operation @e[r=2,name=BH_TemplateScanner,tag=BHSpawnScanners] BH_X = @e[name=BH_TemplateScanner,tag=BHOld,c=1,r=0] BH_X
+	/execute @e[name=BH_TemplateScanner,tag=BHOld] ~ ~ ~ /scoreboard players operation @e[r=2,name=BH_TemplateScanner,tag=BHSpawnScanners] BH_Z = @e[name=BH_TemplateScanner,tag=BHOld,c=1,r=0] BH_Z
+	/execute @e[name=BH_TemplateScanner,tag=BHOld] ~ ~ ~ /scoreboard players add @e[dx=1,name=BH_TemplateScanner,tag=BHSpawnScanners] BH_X 1
+	/execute @e[name=BH_TemplateScanner,tag=BHOld] ~ ~ ~ /scoreboard players remove @e[dx=-1,name=BH_TemplateScanner,tag=BHSpawnScanners] BH_X 1
+	/execute @e[name=BH_TemplateScanner,tag=BHOld] ~ ~ ~ /scoreboard players add @e[dz=1,name=BH_TemplateScanner,tag=BHSpawnScanners] BH_Z 1
+	/execute @e[name=BH_TemplateScanner,tag=BHOld] ~ ~ ~ /scoreboard players remove @e[dz=-1,name=BH_TemplateScanner,tag=BHSpawnScanners] BH_Z 1
+
+	// Template scanners (that CAN replicate scanners) spawn scanners if they are placed above iron block
+	/execute @e[name=BH_TemplateScanner,tag=BHSpawnScanners] ~1 ~ ~ 	detect ~ ~-1 ~ iron_block *	/summon area_effect_cloud ~ ~ ~ {Duration:100,CustomName:"BH_TemplateScanner",Tags:["BHSpawnedIn","BHCurrentCycle"]}
+	/execute @e[name=BH_TemplateScanner,tag=BHSpawnScanners] ~-1 ~ ~ 	detect ~ ~-1 ~ iron_block *	/summon area_effect_cloud ~ ~ ~ {Duration:100,CustomName:"BH_TemplateScanner",Tags:["BHSpawnedIn","BHCurrentCycle"]}
+	/execute @e[name=BH_TemplateScanner,tag=BHSpawnScanners] ~ ~ ~1 	detect ~ ~-1 ~ iron_block *	/summon area_effect_cloud ~ ~ ~ {Duration:100,CustomName:"BH_TemplateScanner",Tags:["BHSpawnedIn","BHCurrentCycle"]}
+	/execute @e[name=BH_TemplateScanner,tag=BHSpawnScanners] ~ ~ ~-1 	detect ~ ~-1 ~ iron_block *	/summon area_effect_cloud ~ ~ ~ {Duration:100,CustomName:"BH_TemplateScanner",Tags:["BHSpawnedIn","BHCurrentCycle"]}
+
+	/execute @e[name=BH_StructureScanner,tag=BHOld] ~ ~ ~ /scoreboard players operation @e[r=2,name=BH_StructureScanner,tag=BHNew] BH_X = @e[name=BH_StructureScanner,tag=BHOld,c=1,r=0] BH_X
+	/execute @e[name=BH_StructureScanner,tag=BHOld] ~ ~ ~ /scoreboard players operation @e[r=2,name=BH_StructureScanner,tag=BHNew] BH_Z = @e[name=BH_StructureScanner,tag=BHOld,c=1,r=0] BH_Z
+	/execute @e[name=BH_StructureScanner,tag=BHOld] ~ ~ ~ /scoreboard players add @e[dx=1,name=BH_StructureScanner,tag=BHNew] BH_X 1
+	/execute @e[name=BH_StructureScanner,tag=BHOld] ~ ~ ~ /scoreboard players remove @e[dx=-1,name=BH_StructureScanner,tag=BHNew] BH_X 1
+	/execute @e[name=BH_StructureScanner,tag=BHOld] ~ ~ ~ /scoreboard players add @e[dz=1,name=BH_StructureScanner,tag=BHNew] BH_Z 1
+	/execute @e[name=BH_StructureScanner,tag=BHOld] ~ ~ ~ /scoreboard players remove @e[dz=-1,name=BH_StructureScanner,tag=BHNew] BH_Z 1
+
+	// Calculate relative structure spawning location coordinates
+	/execute @e[name=BH_StructureScanner,tag=BHNew] ~ ~ ~ /scoreboard players operation @e[name=BH_StructureScanner,tag=BHNew,c=1,r=0] BH_XHolder = @e[name=BH_StructureScanner,tag=BHNew,c=1,r=0] BH_X
+	/execute @e[name=BH_StructureScanner,tag=BHNew] ~ ~ ~ /scoreboard players operation @e[name=BH_StructureScanner,tag=BHNew,c=1,r=0] BH_ZHolder = @e[name=BH_StructureScanner,tag=BHNew,c=1,r=0] BH_Z
+	// Determine which structure scanner's coordinates equals template scanner's coordinates
+	/scoreboard players operation @e[name=BH_StructureScanner,tag=BHNew] BH_XHolder -= @e[name=BH_TemplateScanner,tag=BHSpawnScanners] BH_X
+	/scoreboard players operation @e[name=BH_StructureScanner,tag=BHNew] BH_ZHolder -= @e[name=BH_TemplateScanner,tag=BHSpawnScanners] BH_Z
+	/scoreboard players tag @e[name=BH_StructureScanner,tag=BHNew,score_BH_XHolder_min=0,score_BH_XHolder=0,score_BH_ZHolder_min=0,score_BH_ZHolder=0] add BHSpawnScanners
+
+	// Structure scanners (that CAN replicate scanners) spawn scanners
+	/execute @e[name=BH_StructureScanner,tag=BHSpawnScanners] ~1 ~ ~ 	/summon area_effect_cloud ~ ~ ~ {Duration:100,CustomName:"BH_StructureScanner",Tags:["BHSpawnedIn","BHCurrentCycle"]}
+	/execute @e[name=BH_StructureScanner,tag=BHSpawnScanners] ~-1 ~ ~ 	/summon area_effect_cloud ~ ~ ~ {Duration:100,CustomName:"BH_StructureScanner",Tags:["BHSpawnedIn","BHCurrentCycle"]}
+	/execute @e[name=BH_StructureScanner,tag=BHSpawnScanners] ~ ~ ~1 	/summon area_effect_cloud ~ ~ ~ {Duration:100,CustomName:"BH_StructureScanner",Tags:["BHSpawnedIn","BHCurrentCycle"]}
+	/execute @e[name=BH_StructureScanner,tag=BHSpawnScanners] ~ ~ ~-1 	/summon area_effect_cloud ~ ~ ~ {Duration:100,CustomName:"BH_StructureScanner",Tags:["BHSpawnedIn","BHCurrentCycle"]}
+
+	// Convert current cycle of structure / template scanners to 'previous' cycle
+	/execute @e[tag=BHPreviousCycle] ~ ~ /kill @e[tag=BHCurrentCycle,dx=0]
+	/scoreboard players tag @e[tag=BHCurrentCycle] add BHPreviousCycle
+	/scoreboard players tag @e[tag=BHCurrentCycle] remove BHCurrentCycle
+
+	// ### Change this to 6-bit cloning
+	// Clones TemplateScanner vertical block strip to StructureScanner vertical block strip
+	/execute @e[name=BH_TemplateScanner,tag=BHSpawnScanners] ~ ~ ~ /clone ~ ~ ~ ~ ~63 ~ $cloneToX 0 $cloneToZ
+	/execute @e[name=BH_StructureScanner,tag=BHSpawnScanners] ~ ~ ~ /clone $cloneToX 0 $cloneToZ $cloneToX 63 $cloneToZ ~ ~ ~
+
+	/scoreboard players tag @e[name=BH_TemplateScanner,type=area_effect_cloud,tag=BHSpawnScanners] add BHSpawnedScanners
+	/scoreboard players tag @e[name=BH_TemplateScanner,type=area_effect_cloud,tag=BHSpawnScanners] remove BHSpawnScanners
+
+	/testfor @e[name=BH_TemplateScanner,tag=BHCanSpawnScanners]
+	!invertResult
+	>{"conditional":true}
+		!start_event+ BHConvert
+		!stop_loop+ BHExpand
+	>{"conditional":false}
+
+!event+ BHConvert
+	>{"type":"chain","auto":true}
+	/kill @e[tag=BHOld2]
+	/scoreboard players tag @e[type=area_effect_cloud,tag=BHOld] add BHOld2
+	/scoreboard players tag @e[type=area_effect_cloud,tag=BHNew] add BHOld
+	/scoreboard players tag @e[type=area_effect_cloud,tag=BHNew] remove BHNew
+	/scoreboard players tag @e[type=area_effect_cloud,tag=BHSpawnedIn] add BHNew
+	/scoreboard players tag @e[type=area_effect_cloud,tag=BHSpawnedIn] remove BHSpawnedIn
+	!start_loop+ BHExpand
+
+
+
