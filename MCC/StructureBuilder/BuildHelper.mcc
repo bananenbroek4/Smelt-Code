@@ -103,7 +103,6 @@ $clone_from_z=	-9
 		/scoreboard players tag @e[tag=xiantis_currentcycle_tag] add xiantis_previouscycle_tag
 		/scoreboard players tag @e[tag=xiantis_currentcycle_tag] remove xiantis_currentcycle_tag
 		/scoreboard players tag @e[name=xiantis_template_scanner,tag=xiantis_newmarker_tag] add xiantis_canspawnscanners_tag
-		/say converted!
 		/scoreboard players tag @e[name=plugin_LoopMarker_xiantis_expand] remove xiantis_convert
 	>{"conditional":false}
 	>{"executeAs":""}
