@@ -15,9 +15,9 @@ $clone_from_z=	-9
 
 >{"type":"impulse-chain","conditional":false}
 !event+ xiantis_initiatetransfer
-	/execute @e[name=xiantis_spawnstructure] ~ ~ ~ /summon area_effect_cloud ~ ~ ~ {CustomName:"xiantis_structure_scanner",small:1,marker_tag:1,NoGravity:1,Tags:["xiantis_newmarker_tag"],Duration:100}
+	/execute @e[name=xiantis_spawnstructure] ~ ~ ~ /summon area_effect_cloud ~ ~ ~ {CustomName:"xiantis_structure_scanner",Small:1,Marker:1,NoGravity:1,Tags:["xiantis_newmarker_tag"],Duration:100}
 	//scoreboard players tag @e[name=xiantis_spawnstructure,tag=xiantis_transferstructure] add xiantis_transferredstructure
-	/execute @e[name=xiantis_template] ~ ~ ~ detect ~ ~-1 ~ iron_block 0 /summon area_effect_cloud ~ ~ ~ {CustomName:"xiantis_template_scanner",small:1,marker_tag:1,NoGravity:1,Tags:["xiantis_newmarker_tag","xiantis_spawnscanners_tag"],Duration:100}
+	/execute @e[name=xiantis_template] ~ ~ ~ detect ~ ~-1 ~ iron_block 0 /summon area_effect_cloud ~ ~ ~ {CustomName:"xiantis_template_scanner",Small:1,Marker:1,NoGravity:1,Tags:["xiantis_newmarker_tag","xiantis_spawnscanners_tag"],Duration:100}
 	/*
 	/execute @e[name=xiantis_template_scanner] ~ ~ ~ /clone ~ ~ ~ ~ ~100 ~ $transferpoint_x 0 $transferpoint_z
 	/execute @e[name=xiantis_structure_spawner] ~ ~ ~ /clone $transferpoint_x 0 $transferpoint_z $transferpoint_x 100 $transferpoint_z ~ ~ ~ masked move
@@ -90,9 +90,9 @@ $clone_from_z=	-9
 	!invertResult
 	>{"conditional":true}
 		/testfor @e[name=xiantis_template_scanner]
-		/scoreboard players tag @e[name=plugin_loopmarker_xiantis_expand] add xiantis_convert
+		/scoreboard players tag @e[name=plugin_LoopMarker_xiantis_expand] add xiantis_convert
 	>{"conditional":false}
-	>{"executeAs":"@e[name=plugin_loopmarker_xiantis_expand,tag=xiantis_convert]"}
+	>{"executeAs":"@e[name=plugin_LoopMarker_xiantis_expand,tag=xiantis_convert]"}
 		/kill @e[tag=xiantis_old2marker_tag]
 		/scoreboard players tag @e[type=area_effect_cloud,tag=xiantis_oldmarker_tag] add xiantis_old2marker_tag
 		/scoreboard players tag @e[type=area_effect_cloud,tag=xiantis_oldmarker_tag] remove xiantis_oldmarker_tag
@@ -104,7 +104,7 @@ $clone_from_z=	-9
 		/scoreboard players tag @e[tag=xiantis_currentcycle_tag] remove xiantis_currentcycle_tag
 		/scoreboard players tag @e[name=xiantis_template_scanner,tag=xiantis_newmarker_tag] add xiantis_canspawnscanners_tag
 		/say converted!
-		/scoreboard players tag @e[name=plugin_loopmarker_xiantis_expand] remove xiantis_convert
+		/scoreboard players tag @e[name=plugin_LoopMarker_xiantis_expand] remove xiantis_convert
 	>{"conditional":false}
 	>{"executeAs":""}
 	/scoreboard players tag @r[name=xiantis_template_scanner,type=area_effect_cloud,tag=xiantis_canspawnscanners_tag] add xiantis_spawnscanners_tag
