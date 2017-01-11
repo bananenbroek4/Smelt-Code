@@ -1,116 +1,116 @@
-$cloneToX=		25
-$cloneToZ=		-9
-$cloneFromX=	25
-$cloneFromZ=	-9
+$clone_to_x=		25
+$clone_to_z=		-9
+$clone_from_x=	25
+$clone_from_z=	-9
 
-# Starting Condition
+# starting condition
 >{"type":"repeating-chain","auto":true}
-	/testfor @e[name=BH_Template,type=armor_stand]
+	/testfor @e[name=xiantis_template,type=armor_stand]
 >{"conditional":true}
-	/testfor @e[name=BH_SpawnStructure,type=armor_stand,tag=!BH_TransferStructure]
-	/scoreboard players tag @e[name=BH_SpawnStructure,type=armor_stand,tag=!BH_TransferStructure] add BH_TransferStructure
-	/testfor @e[name=BH_SpawnStructure,tag=!BH_TransferredStructure]
-	!start_event+ BH_InitiateTransfer
-	/scoreboard players tag @e[name=BH_SpawnStructure,tag=BH_TransferStructure] add BH_TransferredStructure
+	/testfor @e[name=xiantis_spawnstructure,type=armor_stand,tag=!xiantis_transferstructure]
+	/scoreboard players tag @e[name=xiantis_spawnstructure,type=armor_stand,tag=!xiantis_transferstructure] add xiantis_transferstructure
+	/testfor @e[name=xiantis_spawnstructure,tag=!xiantis_transferredstructure]
+	!start_event+ xiantis_initiatetransfer
+	/scoreboard players tag @e[name=xiantis_spawnstructure,tag=xiantis_transferstructure] add xiantis_transferredstructure
 
 >{"type":"impulse-chain","conditional":false}
-!event+ BH_InitiateTransfer
-	/execute @e[name=BH_SpawnStructure] ~ ~ ~ /summon area_effect_cloud ~ ~ ~ {CustomName:"BH_StructureScanner",Small:1,Marker:1,NoGravity:1,Tags:["BHNew"],Duration:100}
-	//scoreboard players tag @e[name=BH_SpawnStructure,tag=BH_TransferStructure] add BH_TransferredStructure
-	/execute @e[name=BH_Template] ~ ~ ~ detect ~ ~-1 ~ iron_block 0 /summon area_effect_cloud ~ ~ ~ {CustomName:"BH_TemplateScanner",Small:1,Marker:1,NoGravity:1,Tags:["BHNew","BHSpawnScanners"],Duration:100}
+!event+ xiantis_initiatetransfer
+	/execute @e[name=xiantis_spawnstructure] ~ ~ ~ /summon area_effect_cloud ~ ~ ~ {CustomName:"xiantis_structure_scanner",Small:1,Marker:1,NoGravity:1,Tags:["xiantis_newmarker_tag"],Duration:100}
+	//scoreboard players tag @e[name=xiantis_spawnstructure,tag=xiantis_transferstructure] add xiantis_transferredstructure
+	/execute @e[name=xiantis_template] ~ ~ ~ detect ~ ~-1 ~ iron_block 0 /summon area_effect_cloud ~ ~ ~ {CustomName:"xiantis_template_scanner",Small:1,Marker:1,NoGravity:1,Tags:["xiantis_newmarker_tag","xiantis_spawnscanners_tag"],Duration:100}
 	/*
-	/execute @e[name=BH_TemplateScanner] ~ ~ ~ /clone ~ ~ ~ ~ ~100 ~ $transferPoint_X 0 $transferPoint_Z
-	/execute @e[name=BH_StructureSpawner] ~ ~ ~ /clone $transferPoint_X 0 $transferPoint_Z $transferPoint_X 100 $transferPoint_Z ~ ~ ~ masked move
+	/execute @e[name=xiantis_template_scanner] ~ ~ ~ /clone ~ ~ ~ ~ ~100 ~ $transferpoint_x 0 $transferpoint_z
+	/execute @e[name=xiantis_structure_spawner] ~ ~ ~ /clone $transferpoint_x 0 $transferpoint_z $transferpoint_x 100 $transferpoint_z ~ ~ ~ masked move
 	*/
-	/scoreboard players set @e[tag=BHNew] BH_X 0
-	/scoreboard players set @e[tag=BHNew,name=BH_StructureSpawner] BH_XHolder 0
-	/scoreboard players set @e[tag=BHNew] BH_Z 0
-	/scoreboard players set @e[tag=BHNew,name=BH_StructureSpawner] BH_ZHolder 0
-	!start_loop+ BHExpand
+	/scoreboard players set @e[tag=xiantis_newmarker_tag] xiantis_x 0
+	/scoreboard players set @e[tag=xiantis_newmarker_tag,name=xiantis_structure_spawner] xiantis_xholder 0
+	/scoreboard players set @e[tag=xiantis_newmarker_tag] xiantis_z 0
+	/scoreboard players set @e[tag=xiantis_newmarker_tag,name=xiantis_structure_spawner] xiantis_zholder 0
+	!start_loop+ xiantis_expand
 
 
 
-# System
+# system
 >{"type":"repeating-chain","auto":true}
-!loop+ BHExpand
-	//say CYCLE
-	/scoreboard players tag @e[name=BH_TemplateScanner,type=area_effect_cloud,tag=BHSpawnedScanners] remove BHSpawnScanners
-	// Calculate relative template coordinates
-	/execute @e[name=BH_TemplateScanner,tag=BHOld] ~ ~ ~ /scoreboard players operation @e[r=2,name=BH_TemplateScanner,tag=BHSpawnScanners] BH_X = @e[name=BH_TemplateScanner,tag=BHOld,c=1,r=0] BH_X
-	/execute @e[name=BH_TemplateScanner,tag=BHOld] ~ ~ ~ /scoreboard players operation @e[r=2,name=BH_TemplateScanner,tag=BHSpawnScanners] BH_Z = @e[name=BH_TemplateScanner,tag=BHOld,c=1,r=0] BH_Z
-	/execute @e[name=BH_TemplateScanner,tag=BHOld] ~ ~ ~ /scoreboard players add @e[dx=1,name=BH_TemplateScanner,tag=BHSpawnScanners] BH_X 1
-	/execute @e[name=BH_TemplateScanner,tag=BHOld] ~ ~ ~ /scoreboard players remove @e[dx=-1,name=BH_TemplateScanner,tag=BHSpawnScanners] BH_X 1
-	/execute @e[name=BH_TemplateScanner,tag=BHOld] ~ ~ ~ /scoreboard players add @e[dz=1,name=BH_TemplateScanner,tag=BHSpawnScanners] BH_Z 1
-	/execute @e[name=BH_TemplateScanner,tag=BHOld] ~ ~ ~ /scoreboard players remove @e[dz=-1,name=BH_TemplateScanner,tag=BHSpawnScanners] BH_Z 1
+!loop+ xiantis_expand
+	//say cycle_tag
+	/scoreboard players tag @e[name=xiantis_template_scanner,type=area_effect_cloud,tag=xiantis_spawnedscanners_tag] remove xiantis_spawnscanners_tag
+	// calculate relative template coordinates
+	/execute @e[name=xiantis_template_scanner,tag=xiantis_oldmarker_tag] ~ ~ ~ /scoreboard players operation @e[r=2,name=xiantis_template_scanner,tag=xiantis_spawnscanners_tag] xiantis_x = @e[name=xiantis_template_scanner,tag=xiantis_oldmarker_tag,c=1,r=0] xiantis_x
+	/execute @e[name=xiantis_template_scanner,tag=xiantis_oldmarker_tag] ~ ~ ~ /scoreboard players operation @e[r=2,name=xiantis_template_scanner,tag=xiantis_spawnscanners_tag] xiantis_z = @e[name=xiantis_template_scanner,tag=xiantis_oldmarker_tag,c=1,r=0] xiantis_z
+	/execute @e[name=xiantis_template_scanner,tag=xiantis_oldmarker_tag] ~ ~ ~ /scoreboard players add @e[dx=1,name=xiantis_template_scanner,tag=xiantis_spawnscanners_tag] xiantis_x 1
+	/execute @e[name=xiantis_template_scanner,tag=xiantis_oldmarker_tag] ~ ~ ~ /scoreboard players remove @e[dx=-1,name=xiantis_template_scanner,tag=xiantis_spawnscanners_tag] xiantis_x 1
+	/execute @e[name=xiantis_template_scanner,tag=xiantis_oldmarker_tag] ~ ~ ~ /scoreboard players add @e[dz=1,name=xiantis_template_scanner,tag=xiantis_spawnscanners_tag] xiantis_z 1
+	/execute @e[name=xiantis_template_scanner,tag=xiantis_oldmarker_tag] ~ ~ ~ /scoreboard players remove @e[dz=-1,name=xiantis_template_scanner,tag=xiantis_spawnscanners_tag] xiantis_z 1
 
-	// Template scanners (that CAN replicate scanners) spawn scanners if they are placed above iron block
-	/execute @e[name=BH_TemplateScanner,tag=BHSpawnScanners] ~1 ~ ~ detect ~ ~-1 ~ iron_block * /summon area_effect_cloud ~ ~ ~ {Duration:100,CustomName:"BH_TemplateScanner",Tags:["BHSpawnedIn","BHCurrentCycle"]}
-	/execute @e[name=BH_TemplateScanner,tag=BHSpawnScanners] ~-1 ~ ~ detect ~ ~-1 ~ iron_block * /summon area_effect_cloud ~ ~ ~ {Duration:100,CustomName:"BH_TemplateScanner",Tags:["BHSpawnedIn","BHCurrentCycle"]}
-	/execute @e[name=BH_TemplateScanner,tag=BHSpawnScanners] ~ ~ ~1 detect ~ ~-1 ~ iron_block *	/summon area_effect_cloud ~ ~ ~ {Duration:100,CustomName:"BH_TemplateScanner",Tags:["BHSpawnedIn","BHCurrentCycle"]}
-	/execute @e[name=BH_TemplateScanner,tag=BHSpawnScanners] ~ ~ ~-1 detect ~ ~-1 ~ iron_block * /summon area_effect_cloud ~ ~ ~ {Duration:100,CustomName:"BH_TemplateScanner",Tags:["BHSpawnedIn","BHCurrentCycle"]}
+	// template scanners_tag (that can replicate scanners_tag) spawn scanners_tag if they are placed above iron block
+	/execute @e[name=xiantis_template_scanner,tag=xiantis_spawnscanners_tag] ~1 ~ ~ detect ~ ~-1 ~ iron_block * /summon area_effect_cloud ~ ~ ~ {Duration:100,CustomName:"xiantis_template_scanner",Tags:["xiantis_spawnedin_tag","xiantis_currentcycle_tag"]}
+	/execute @e[name=xiantis_template_scanner,tag=xiantis_spawnscanners_tag] ~-1 ~ ~ detect ~ ~-1 ~ iron_block * /summon area_effect_cloud ~ ~ ~ {Duration:100,CustomName:"xiantis_template_scanner",Tags:["xiantis_spawnedin_tag","xiantis_currentcycle_tag"]}
+	/execute @e[name=xiantis_template_scanner,tag=xiantis_spawnscanners_tag] ~ ~ ~1 detect ~ ~-1 ~ iron_block *	/summon area_effect_cloud ~ ~ ~ {Duration:100,CustomName:"xiantis_template_scanner",Tags:["xiantis_spawnedin_tag","xiantis_currentcycle_tag"]}
+	/execute @e[name=xiantis_template_scanner,tag=xiantis_spawnscanners_tag] ~ ~ ~-1 detect ~ ~-1 ~ iron_block * /summon area_effect_cloud ~ ~ ~ {Duration:100,CustomName:"xiantis_template_scanner",Tags:["xiantis_spawnedin_tag","xiantis_currentcycle_tag"]}
 
-	/execute @e[name=BH_StructureScanner,tag=BHOld] ~ ~ ~ /scoreboard players operation @e[r=2,name=BH_StructureScanner,tag=BHNew] BH_X = @e[name=BH_StructureScanner,tag=BHOld,c=1,r=0] BH_X
-	/execute @e[name=BH_StructureScanner,tag=BHOld] ~ ~ ~ /scoreboard players operation @e[r=2,name=BH_StructureScanner,tag=BHNew] BH_Z = @e[name=BH_StructureScanner,tag=BHOld,c=1,r=0] BH_Z
-	/execute @e[name=BH_StructureScanner,tag=BHOld] ~ ~ ~ /scoreboard players add @e[dx=1,name=BH_StructureScanner,tag=BHNew] BH_X 1
-	/execute @e[name=BH_StructureScanner,tag=BHOld] ~ ~ ~ /scoreboard players remove @e[dx=-1,name=BH_StructureScanner,tag=BHNew] BH_X 1
-	/execute @e[name=BH_StructureScanner,tag=BHOld] ~ ~ ~ /scoreboard players add @e[dz=1,name=BH_StructureScanner,tag=BHNew] BH_Z 1
-	/execute @e[name=BH_StructureScanner,tag=BHOld] ~ ~ ~ /scoreboard players remove @e[dz=-1,name=BH_StructureScanner,tag=BHNew] BH_Z 1
+	/execute @e[name=xiantis_structure_scanner,tag=xiantis_oldmarker_tag] ~ ~ ~ /scoreboard players operation @e[r=2,name=xiantis_structure_scanner,tag=xiantis_newmarker_tag] xiantis_x = @e[name=xiantis_structure_scanner,tag=xiantis_oldmarker_tag,c=1,r=0] xiantis_x
+	/execute @e[name=xiantis_structure_scanner,tag=xiantis_oldmarker_tag] ~ ~ ~ /scoreboard players operation @e[r=2,name=xiantis_structure_scanner,tag=xiantis_newmarker_tag] xiantis_z = @e[name=xiantis_structure_scanner,tag=xiantis_oldmarker_tag,c=1,r=0] xiantis_z
+	/execute @e[name=xiantis_structure_scanner,tag=xiantis_oldmarker_tag] ~ ~ ~ /scoreboard players add @e[dx=1,name=xiantis_structure_scanner,tag=xiantis_newmarker_tag] xiantis_x 1
+	/execute @e[name=xiantis_structure_scanner,tag=xiantis_oldmarker_tag] ~ ~ ~ /scoreboard players remove @e[dx=-1,name=xiantis_structure_scanner,tag=xiantis_newmarker_tag] xiantis_x 1
+	/execute @e[name=xiantis_structure_scanner,tag=xiantis_oldmarker_tag] ~ ~ ~ /scoreboard players add @e[dz=1,name=xiantis_structure_scanner,tag=xiantis_newmarker_tag] xiantis_z 1
+	/execute @e[name=xiantis_structure_scanner,tag=xiantis_oldmarker_tag] ~ ~ ~ /scoreboard players remove @e[dz=-1,name=xiantis_structure_scanner,tag=xiantis_newmarker_tag] xiantis_z 1
 
-	// Calculate relative structure spawning location coordinates
-	/execute @e[name=BH_StructureScanner,tag=BHNew] ~ ~ ~ /scoreboard players operation @e[name=BH_StructureScanner,tag=BHNew,c=1,r=0] BH_XHolder = @e[name=BH_StructureScanner,tag=BHNew,c=1,r=0] BH_X
-	/execute @e[name=BH_StructureScanner,tag=BHNew] ~ ~ ~ /scoreboard players operation @e[name=BH_StructureScanner,tag=BHNew,c=1,r=0] BH_ZHolder = @e[name=BH_StructureScanner,tag=BHNew,c=1,r=0] BH_Z
-	// Determine which structure scanner's coordinates equals template scanner's coordinates
-	/scoreboard players operation @e[name=BH_StructureScanner,tag=BHNew] BH_XHolder -= @e[name=BH_TemplateScanner,tag=BHSpawnScanners] BH_X
-	/scoreboard players operation @e[name=BH_StructureScanner,tag=BHNew] BH_ZHolder -= @e[name=BH_TemplateScanner,tag=BHSpawnScanners] BH_Z
-	/scoreboard players tag @e[name=BH_StructureScanner,tag=BHNew,score_BH_XHolder_min=0,score_BH_XHolder=0,score_BH_ZHolder_min=0,score_BH_ZHolder=0] add BHSpawnScanners
+	// calculate relative structure spawning location coordinates
+	/execute @e[name=xiantis_structure_scanner,tag=xiantis_newmarker_tag] ~ ~ ~ /scoreboard players operation @e[name=xiantis_structure_scanner,tag=xiantis_newmarker_tag,c=1,r=0] xiantis_xholder = @e[name=xiantis_structure_scanner,tag=xiantis_newmarker_tag,c=1,r=0] xiantis_x
+	/execute @e[name=xiantis_structure_scanner,tag=xiantis_newmarker_tag] ~ ~ ~ /scoreboard players operation @e[name=xiantis_structure_scanner,tag=xiantis_newmarker_tag,c=1,r=0] xiantis_zholder = @e[name=xiantis_structure_scanner,tag=xiantis_newmarker_tag,c=1,r=0] xiantis_z
+	// determine which structure scanner's coordinates equals template scanner's coordinates
+	/scoreboard players operation @e[name=xiantis_structure_scanner,tag=xiantis_newmarker_tag] xiantis_xholder -= @e[name=xiantis_template_scanner,tag=xiantis_spawnscanners_tag] xiantis_x
+	/scoreboard players operation @e[name=xiantis_structure_scanner,tag=xiantis_newmarker_tag] xiantis_zholder -= @e[name=xiantis_template_scanner,tag=xiantis_spawnscanners_tag] xiantis_z
+	/scoreboard players tag @e[name=xiantis_structure_scanner,tag=xiantis_newmarker_tag,score_xiantis_xholder_min=0,score_xiantis_xholder=0,score_xiantis_zholder_min=0,score_xiantis_zholder=0] add xiantis_spawnscanners_tag
 
-	// Structure scanners (that CAN replicate scanners) spawn scanners
-	/execute @e[name=BH_StructureScanner,tag=BHSpawnScanners] ~1 ~ ~ /summon area_effect_cloud ~ ~ ~ {Duration:100,CustomName:"BH_StructureScanner",Tags:["BHSpawnedIn","BHCurrentCycle"]}
-	/execute @e[name=BH_StructureScanner,tag=BHSpawnScanners] ~-1 ~ ~ /summon area_effect_cloud ~ ~ ~ {Duration:100,CustomName:"BH_StructureScanner",Tags:["BHSpawnedIn","BHCurrentCycle"]}
-	/execute @e[name=BH_StructureScanner,tag=BHSpawnScanners] ~ ~ ~1 /summon area_effect_cloud ~ ~ ~ {Duration:100,CustomName:"BH_StructureScanner",Tags:["BHSpawnedIn","BHCurrentCycle"]}
-	/execute @e[name=BH_StructureScanner,tag=BHSpawnScanners] ~ ~ ~-1 /summon area_effect_cloud ~ ~ ~ {Duration:100,CustomName:"BH_StructureScanner",Tags:["BHSpawnedIn","BHCurrentCycle"]}
+	// structure scanners_tag (that can replicate scanners_tag) spawn scanners_tag
+	/execute @e[name=xiantis_structure_scanner,tag=xiantis_spawnscanners_tag] ~1 ~ ~ /summon area_effect_cloud ~ ~ ~ {Duration:100,CustomName:"xiantis_structure_scanner",Tags:["xiantis_spawnedin_tag","xiantis_currentcycle_tag"]}
+	/execute @e[name=xiantis_structure_scanner,tag=xiantis_spawnscanners_tag] ~-1 ~ ~ /summon area_effect_cloud ~ ~ ~ {Duration:100,CustomName:"xiantis_structure_scanner",Tags:["xiantis_spawnedin_tag","xiantis_currentcycle_tag"]}
+	/execute @e[name=xiantis_structure_scanner,tag=xiantis_spawnscanners_tag] ~ ~ ~1 /summon area_effect_cloud ~ ~ ~ {Duration:100,CustomName:"xiantis_structure_scanner",Tags:["xiantis_spawnedin_tag","xiantis_currentcycle_tag"]}
+	/execute @e[name=xiantis_structure_scanner,tag=xiantis_spawnscanners_tag] ~ ~ ~-1 /summon area_effect_cloud ~ ~ ~ {Duration:100,CustomName:"xiantis_structure_scanner",Tags:["xiantis_spawnedin_tag","xiantis_currentcycle_tag"]}
 
-	// Convert current cycle of structure / template scanners to 'previous' cycle
-	/execute @e[tag=BHPreviousCycle] ~ ~ /kill @e[tag=BHCurrentCycle,dx=0]
+	// convert current cycle_tag of structure / template scanners_tag to 'previous' cycle_tag
+	/execute @e[tag=xiantis_previouscycle_tag] ~ ~ /kill @e[tag=xiantis_currentcycle_tag,dx=0]
 	
 
-	// ### Change this to 6-bit cloning
-	// Clones TemplateScanner vertical block strip to StructureScanner vertical block strip
-	/execute @e[name=BH_TemplateScanner,tag=BHSpawnScanners] ~ ~ ~ /clone ~ ~ ~ ~ ~63 ~ $cloneToX 0 $cloneToZ
-	/execute @e[name=BH_StructureScanner,tag=BHSpawnScanners] ~ ~ ~ /clone $cloneToX 0 $cloneToZ $cloneToX 63 $cloneToZ ~ ~ ~
+	// ### change this to 6-bit cloning
+	// clones templatescanner vertical block strip to structurescanner vertical block strip
+	/execute @e[name=xiantis_template_scanner,tag=xiantis_spawnscanners_tag] ~ ~ ~ /clone ~ ~ ~ ~ ~63 ~ $clone_to_x 0 $clone_to_z
+	/execute @e[name=xiantis_structure_scanner,tag=xiantis_spawnscanners_tag] ~ ~ ~ /clone $clone_to_x 0 $clone_to_z $clone_to_x 63 $clone_to_z ~ ~ ~ masked
 
-	/execute @e[type=area_effect_cloud,tag=BHSpawnScanners] ~ ~ ~ /particle flame ~ ~3 ~ .1 4 .1 0 20
+	/execute @e[type=area_effect_cloud,tag=xiantis_spawnscanners_tag] ~ ~ ~ /particle flame ~ ~3 ~ .1 4 .1 0 20
 
-	/scoreboard players tag @e[type=area_effect_cloud,tag=BHSpawnScanners] add BHSpawnedScanners
-	/scoreboard players tag @e[type=area_effect_cloud,tag=BHSpawnScanners] remove BHCanSpawnScanners
-	/scoreboard players tag @e[type=area_effect_cloud,tag=BHSpawnScanners] remove BHSpawnScanners
+	/scoreboard players tag @e[type=area_effect_cloud,tag=xiantis_spawnscanners_tag] add xiantis_spawnedscanners_tag
+	/scoreboard players tag @e[type=area_effect_cloud,tag=xiantis_spawnscanners_tag] remove xiantis_canspawnscanners_tag
+	/scoreboard players tag @e[type=area_effect_cloud,tag=xiantis_spawnscanners_tag] remove xiantis_spawnscanners_tag
 
 
-	/testfor @e[name=BH_TemplateScanner,tag=BHCanSpawnScanners]
+	/testfor @e[name=xiantis_template_scanner,tag=xiantis_canspawnscanners_tag]
 	!invertResult
 	>{"conditional":true}
-		/testfor @e[name=BH_TemplateScanner]
-		/scoreboard players tag @e[name=plugin_LoopMarker_BHExpand] add BHConvert
+		/testfor @e[name=xiantis_template_scanner]
+		/scoreboard players tag @e[name=plugin_LoopMarker_xiantis_expand] add xiantis_convert
 	>{"conditional":false}
-	>{"executeAs":"@e[name=plugin_LoopMarker_BHExpand,tag=BHConvert]"}
-		/kill @e[tag=BHOld2]
-		/scoreboard players tag @e[type=area_effect_cloud,tag=BHOld] add BHOld2
-		/scoreboard players tag @e[type=area_effect_cloud,tag=BHOld] remove BHOld
-		/scoreboard players tag @e[type=area_effect_cloud,tag=BHNew] add BHOld
-		/scoreboard players tag @e[type=area_effect_cloud,tag=BHNew] remove BHNew
-		/scoreboard players tag @e[type=area_effect_cloud,tag=BHSpawnedIn] add BHNew
-		/scoreboard players tag @e[type=area_effect_cloud,tag=BHSpawnedIn] remove BHSpawnedIn
-		/scoreboard players tag @e[tag=BHCurrentCycle] add BHPreviousCycle
-		/scoreboard players tag @e[tag=BHCurrentCycle] remove BHCurrentCycle
-		/scoreboard players tag @e[name=BH_TemplateScanner,tag=BHNew] add BHCanSpawnScanners
-		/say Converted!
-		/scoreboard players tag @e[name=plugin_LoopMarker_BHExpand] remove BHConvert
+	>{"executeAs":"@e[name=plugin_LoopMarker_xiantis_expand,tag=xiantis_convert]"}
+		/kill @e[tag=xiantis_old2marker_tag]
+		/scoreboard players tag @e[type=area_effect_cloud,tag=xiantis_oldmarker_tag] add xiantis_old2marker_tag
+		/scoreboard players tag @e[type=area_effect_cloud,tag=xiantis_oldmarker_tag] remove xiantis_oldmarker_tag
+		/scoreboard players tag @e[type=area_effect_cloud,tag=xiantis_newmarker_tag] add xiantis_oldmarker_tag
+		/scoreboard players tag @e[type=area_effect_cloud,tag=xiantis_newmarker_tag] remove xiantis_newmarker_tag
+		/scoreboard players tag @e[type=area_effect_cloud,tag=xiantis_spawnedin_tag] add xiantis_newmarker_tag
+		/scoreboard players tag @e[type=area_effect_cloud,tag=xiantis_spawnedin_tag] remove xiantis_spawnedin_tag
+		/scoreboard players tag @e[tag=xiantis_currentcycle_tag] add xiantis_previouscycle_tag
+		/scoreboard players tag @e[tag=xiantis_currentcycle_tag] remove xiantis_currentcycle_tag
+		/scoreboard players tag @e[name=xiantis_template_scanner,tag=xiantis_newmarker_tag] add xiantis_canspawnscanners_tag
+		/say converted!
+		/scoreboard players tag @e[name=plugin_LoopMarker_xiantis_expand] remove xiantis_convert
 	>{"conditional":false}
 	>{"executeAs":""}
-	/scoreboard players tag @r[name=BH_TemplateScanner,type=area_effect_cloud,tag=BHCanSpawnScanners] add BHSpawnScanners
+	/scoreboard players tag @r[name=xiantis_template_scanner,type=area_effect_cloud,tag=xiantis_canspawnscanners_tag] add xiantis_spawnscanners_tag
 
-	/testfor @e[name=BH_TemplateScanner]
-	!invertResult
+	/testfor @e[name=xiantis_template_scanner]
+	!invertresult
 	>{"conditional":true}
-		!stop_loop+ BHExpand
+		!stop_loop+ xiantis_expand
 	>{"conditional":false}
