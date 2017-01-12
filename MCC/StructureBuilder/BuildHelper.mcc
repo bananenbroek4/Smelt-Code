@@ -90,8 +90,7 @@ $aecDuration=100
 	/execute @e[name=xiantis_structure_scanner,tag=xiantis_spawnscanners_tag] ~ ~ ~ /scoreboard players tag @e[dz=1,tag=xiantis_thisstage] add nogonegz
 	/execute @e[name=xiantis_structure_scanner,tag=xiantis_spawnscanners_tag] ~ ~ ~ /scoreboard players tag @e[dz=1,tag=xiantis_thisstage] add nogoposz
 	*/
-	// convert current cycle_tag of structure / template scanners_tag to 'previous' cycle_tag
-	//execute @e[tag=xiantis_previouscycle_tag] ~ ~-1 ~ /kill @e[tag=xiantis_currentcycle_tag,dy=2]
+	// convert current cycle_tag of structure / template scanners_tag to 'previous' cycle_tag]
 	/execute @e[tag=xiantis_previousstage] ~ ~-1 ~ /kill @e[tag=xiantis_thisstage,dy=2]
 	/scoreboard players tag @e[tag=xiantis_thisstage] add xiantis_previousstage
 	/scoreboard players tag @e[tag=xiantis_thisstage] remove xiantis_thisstage
