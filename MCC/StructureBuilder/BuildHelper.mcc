@@ -17,6 +17,7 @@ $aecDuration=100
 
 >{"type":"impulse-chain","conditional":false}
 !event+ xiantis_initiatetransfer
+	/execute @e[name=xiantis_spawnstructure] ~ ~ ~ /fill ~ ~ ~ ~ ~ ~ air 0 replace command_block *
 	/execute @e[name=xiantis_spawnstructure] ~ ~ ~ /summon area_effect_cloud ~ ~ ~ {CustomName:"xiantis_structure_scanner",Small:1,Marker:1,NoGravity:1,Tags:["xiantis_newmarker_tag"],Duration:$aecDuration}
 	/kill @e[name=xiantis_spawnstructure]
 	//scoreboard players tag @e[name=xiantis_spawnstructure,tag=xiantis_transferstructure] add xiantis_transferredstructure
@@ -51,12 +52,17 @@ $aecDuration=100
 	/execute @e[name=xiantis_template_scanner,tag=xiantis_oldmarker_tag] ~ ~ ~ /scoreboard players remove @e[dz=-1,name=xiantis_template_scanner,tag=xiantis_spawnscanners_tag] xiantis_z 1
 
 	// template scanners_tag (that can replicate scanners_tag) spawn scanners_tag if they are placed above iron block
-	/execute @e[name=xiantis_template_scanner,tag=xiantis_spawnscanners_tag] ~1 ~ ~ detect ~ ~-1 ~ iron_block * /summon area_effect_cloud ~ ~ ~ {Duration:$aecDuration,CustomName:"xiantis_template_scanner",Tags:["xiantis_spawnedin_tag","xiantis_currentcycle_tag","xiantis_thisstage"]}
-	/execute @e[name=xiantis_template_scanner,tag=xiantis_spawnscanners_tag] ~-1 ~ ~ detect ~ ~-1 ~ iron_block * /summon area_effect_cloud ~ ~ ~ {Duration:$aecDuration,CustomName:"xiantis_template_scanner",Tags:["xiantis_spawnedin_tag","xiantis_currentcycle_tag","xiantis_thisstage"]}
-	/execute @e[name=xiantis_template_scanner,tag=xiantis_spawnscanners_tag] ~ ~ ~1 detect ~ ~-1 ~ iron_block *	/summon area_effect_cloud ~ ~ ~ {Duration:$aecDuration,CustomName:"xiantis_template_scanner",Tags:["xiantis_spawnedin_tag","xiantis_currentcycle_tag","xiantis_thisstage"]}
-	/execute @e[name=xiantis_template_scanner,tag=xiantis_spawnscanners_tag] ~ ~ ~-1 detect ~ ~-1 ~ iron_block * /summon area_effect_cloud ~ ~ ~ {Duration:$aecDuration,CustomName:"xiantis_template_scanner",Tags:["xiantis_spawnedin_tag","xiantis_currentcycle_tag","xiantis_thisstage"]}
+	/execute @e[name=xiantis_template_scanner,tag=xiantis_spawnscanners_tag] ~ ~ ~ /execute @e[c=1,r=0,tag=!xiantis_nogoposx] ~1 ~ ~ detect ~ ~-1 ~ iron_block * /summon area_effect_cloud ~ ~ ~ {Duration:$aecDuration,CustomName:"xiantis_template_scanner",Tags:["xiantis_spawnedin_tag","xiantis_currentcycle_tag","xiantis_thisstage"]}
+	/execute @e[name=xiantis_template_scanner,tag=xiantis_spawnscanners_tag] ~ ~ ~ /execute @e[c=1,r=0,tag=!xiantis_nogonegx] ~-1 ~ ~ detect ~ ~-1 ~ iron_block * /summon area_effect_cloud ~ ~ ~ {Duration:$aecDuration,CustomName:"xiantis_template_scanner",Tags:["xiantis_spawnedin_tag","xiantis_currentcycle_tag","xiantis_thisstage"]}
+	/execute @e[name=xiantis_template_scanner,tag=xiantis_spawnscanners_tag] ~ ~ ~ /execute @e[c=1,r=0,tag=!xiantis_nogoposz] ~ ~ ~1 detect ~ ~-1 ~ iron_block *	/summon area_effect_cloud ~ ~ ~ {Duration:$aecDuration,CustomName:"xiantis_template_scanner",Tags:["xiantis_spawnedin_tag","xiantis_currentcycle_tag","xiantis_thisstage"]}
+	/execute @e[name=xiantis_template_scanner,tag=xiantis_spawnscanners_tag] ~ ~ ~ /execute @e[c=1,r=0,tag=!xiantis_nogonegz] ~ ~ ~-1 detect ~ ~-1 ~ iron_block * /summon area_effect_cloud ~ ~ ~ {Duration:$aecDuration,CustomName:"xiantis_template_scanner",Tags:["xiantis_spawnedin_tag","xiantis_currentcycle_tag","xiantis_thisstage"]}
 	/execute @e[tag=xiantis_previouscycle_tag] ~ ~-1 ~ /kill @e[tag=xiantis_currentcycle_tag,dy=2]
-
+	/*
+	/execute @e[name=xiantis_template_scanner,tag=xiantis_spawnscanners_tag] ~ ~ ~ /scoreboard players tag @e[dx=1,tag=xiantis_thisstage] add nogonegx
+	/execute @e[name=xiantis_template_scanner,tag=xiantis_spawnscanners_tag] ~ ~ ~ /scoreboard players tag @e[dx=-1,tag=xiantis_thisstage] add nogoposx
+	/execute @e[name=xiantis_template_scanner,tag=xiantis_spawnscanners_tag] ~ ~ ~ /scoreboard players tag @e[dz=1,tag=xiantis_thisstage] add nogonegz
+	/execute @e[name=xiantis_template_scanner,tag=xiantis_spawnscanners_tag] ~ ~ ~ /scoreboard players tag @e[dz=1,tag=xiantis_thisstage] add nogoposz
+	*/
 	/execute @e[name=xiantis_structure_scanner,tag=xiantis_oldmarker_tag] ~ ~ ~ /scoreboard players operation @e[r=2,name=xiantis_structure_scanner,tag=xiantis_newmarker_tag] xiantis_x = @e[name=xiantis_structure_scanner,tag=xiantis_oldmarker_tag,c=1,r=0] xiantis_x
 	/execute @e[name=xiantis_structure_scanner,tag=xiantis_oldmarker_tag] ~ ~ ~ /scoreboard players operation @e[r=2,name=xiantis_structure_scanner,tag=xiantis_newmarker_tag] xiantis_z = @e[name=xiantis_structure_scanner,tag=xiantis_oldmarker_tag,c=1,r=0] xiantis_z
 	/execute @e[name=xiantis_structure_scanner,tag=xiantis_oldmarker_tag] ~ ~ ~ /scoreboard players add @e[dx=1,name=xiantis_structure_scanner,tag=xiantis_newmarker_tag] xiantis_x 1
@@ -71,13 +77,19 @@ $aecDuration=100
 	/scoreboard players operation @e[name=xiantis_structure_scanner,tag=xiantis_newmarker_tag] xiantis_xholder -= @e[name=xiantis_template_scanner,tag=xiantis_spawnscanners_tag] xiantis_x
 	/scoreboard players operation @e[name=xiantis_structure_scanner,tag=xiantis_newmarker_tag] xiantis_zholder -= @e[name=xiantis_template_scanner,tag=xiantis_spawnscanners_tag] xiantis_z
 	/scoreboard players tag @e[name=xiantis_structure_scanner,tag=xiantis_newmarker_tag,score_xiantis_xholder_min=0,score_xiantis_xholder=0,score_xiantis_zholder_min=0,score_xiantis_zholder=0] add xiantis_spawnscanners_tag
+	/tellraw @p [{"text":"X: "},""]
 
 	// structure scanners_tag (that can replicate scanners_tag) spawn scanners_tag
-	/execute @e[name=xiantis_structure_scanner,tag=xiantis_spawnscanners_tag] ~1 ~ ~ /summon area_effect_cloud ~ ~ ~ {Duration:$aecDuration,CustomName:"xiantis_structure_scanner",Tags:["xiantis_spawnedin_tag","xiantis_currentcycle_tag","xiantis_thisstage"]}
-	/execute @e[name=xiantis_structure_scanner,tag=xiantis_spawnscanners_tag] ~-1 ~ ~ /summon area_effect_cloud ~ ~ ~ {Duration:$aecDuration,CustomName:"xiantis_structure_scanner",Tags:["xiantis_spawnedin_tag","xiantis_currentcycle_tag","xiantis_thisstage"]}
-	/execute @e[name=xiantis_structure_scanner,tag=xiantis_spawnscanners_tag] ~ ~ ~1 /summon area_effect_cloud ~ ~ ~ {Duration:$aecDuration,CustomName:"xiantis_structure_scanner",Tags:["xiantis_spawnedin_tag","xiantis_currentcycle_tag","xiantis_thisstage"]}
-	/execute @e[name=xiantis_structure_scanner,tag=xiantis_spawnscanners_tag] ~ ~ ~-1 /summon area_effect_cloud ~ ~ ~ {Duration:$aecDuration,CustomName:"xiantis_structure_scanner",Tags:["xiantis_spawnedin_tag","xiantis_currentcycle_tag","xiantis_thisstage"]}
-
+	/execute @e[name=xiantis_structure_scanner,tag=xiantis_spawnscanners_tag] ~ ~ ~ /execute @e[c=1,r=0,tag=!xiantis_nogoposx] ~1 ~ ~ /summon area_effect_cloud ~ ~ ~ {Duration:$aecDuration,CustomName:"xiantis_structure_scanner",Tags:["xiantis_spawnedin_tag","xiantis_currentcycle_tag","xiantis_thisstage"]}
+	/execute @e[name=xiantis_structure_scanner,tag=xiantis_spawnscanners_tag] ~ ~ ~ /execute @e[c=1,r=0,tag=!xiantis_nogonegx] ~-1 ~ ~ /summon area_effect_cloud ~ ~ ~ {Duration:$aecDuration,CustomName:"xiantis_structure_scanner",Tags:["xiantis_spawnedin_tag","xiantis_currentcycle_tag","xiantis_thisstage"]}
+	/execute @e[name=xiantis_structure_scanner,tag=xiantis_spawnscanners_tag] ~ ~ ~ /execute @e[c=1,r=0,tag=!xiantis_nogoposz] ~ ~ ~1 /summon area_effect_cloud ~ ~ ~ {Duration:$aecDuration,CustomName:"xiantis_structure_scanner",Tags:["xiantis_spawnedin_tag","xiantis_currentcycle_tag","xiantis_thisstage"]}
+	/execute @e[name=xiantis_structure_scanner,tag=xiantis_spawnscanners_tag] ~ ~ ~ /execute @e[c=1,r=0,tag=!xiantis_nogonegz] ~ ~ ~-1 /summon area_effect_cloud ~ ~ ~ {Duration:$aecDuration,CustomName:"xiantis_structure_scanner",Tags:["xiantis_spawnedin_tag","xiantis_currentcycle_tag","xiantis_thisstage"]}
+	/*
+	/execute @e[name=xiantis_structure_scanner,tag=xiantis_spawnscanners_tag] ~ ~ ~ /scoreboard players tag @e[dx=1,tag=xiantis_thisstage] add nogonegx
+	/execute @e[name=xiantis_structure_scanner,tag=xiantis_spawnscanners_tag] ~ ~ ~ /scoreboard players tag @e[dx=-1,tag=xiantis_thisstage] add nogoposx
+	/execute @e[name=xiantis_structure_scanner,tag=xiantis_spawnscanners_tag] ~ ~ ~ /scoreboard players tag @e[dz=1,tag=xiantis_thisstage] add nogonegz
+	/execute @e[name=xiantis_structure_scanner,tag=xiantis_spawnscanners_tag] ~ ~ ~ /scoreboard players tag @e[dz=1,tag=xiantis_thisstage] add nogoposz
+	*/
 	// convert current cycle_tag of structure / template scanners_tag to 'previous' cycle_tag
 	//execute @e[tag=xiantis_previouscycle_tag] ~ ~-1 ~ /kill @e[tag=xiantis_currentcycle_tag,dy=2]
 	/execute @e[tag=xiantis_previousstage] ~ ~-1 ~ /kill @e[tag=xiantis_thisstage,dy=2]
@@ -90,7 +102,8 @@ $aecDuration=100
 	/execute @e[name=xiantis_template_scanner,tag=xiantis_spawnscanners_tag] ~ ~ ~ /clone ~ ~ ~ ~ ~63 ~ $clone_to_x 1 $clone_to_z
 	/execute @e[name=xiantis_structure_scanner,tag=xiantis_spawnscanners_tag] ~ ~ ~ /clone $clone_to_x 1 $clone_to_z $clone_to_x 64 $clone_to_z ~ ~ ~ masked
 
-	//execute @e[type=area_effect_cloud,tag=xiantis_spawnscanners_tag] ~ ~ ~ /particle flame ~ ~3 ~ .1 4 .1 0 20
+	/execute @e[name=xiantis_structure_scanner,tag=xiantis_spawnscanners_tag] ~ ~ ~ /particle flame ~ ~ ~ .2 0 .2 0 4
+	/execute @e[name=xiantis_template_scanner,tag=xiantis_spawnscanners_tag] ~ ~ ~ /particle witchMagic ~ ~ ~ .2 0 .2 0 4
 
 	/scoreboard players tag @e[type=area_effect_cloud,tag=xiantis_spawnscanners_tag] add xiantis_spawnedscanners_tag
 	/scoreboard players tag @e[type=area_effect_cloud,tag=xiantis_spawnscanners_tag] remove xiantis_canspawnscanners_tag
@@ -104,7 +117,13 @@ $aecDuration=100
 		/scoreboard players tag @e[name=plugin_LoopMarker_xiantis_expand] add xiantis_convert
 	>{"conditional":false}
 	>{"executeAs":"@e[name=plugin_LoopMarker_xiantis_expand,tag=xiantis_convert]"}
-		/kill @e[tag=xiantis_old2marker_tag]
+		/execute @e[tag=xiantis_currentcycle_tag] ~ ~ ~ /scoreboard players tag @e[dx=1,tag=xiantis_spawnedin_tag] add nogonegx
+		/execute @e[tag=xiantis_currentcycle_tag] ~ ~ ~ /scoreboard players tag @e[dx=-1,tag=xiantis_spawnedin_tag] add nogoposx
+		/execute @e[tag=xiantis_currentcycle_tag] ~ ~ ~ /scoreboard players tag @e[dz=1,tag=xiantis_spawnedin_tag] add nogonegz
+		/execute @e[tag=xiantis_currentcycle_tag] ~ ~ ~ /scoreboard players tag @e[dz=1,tag=xiantis_spawnedin_tag] add nogoposz
+
+		/kill @e[tag=xiantis_oldmarker_tag]
+		//kill @e[tag=xiantis_old2marker_tag]
 		/scoreboard players tag @e[type=area_effect_cloud,tag=xiantis_oldmarker_tag] add xiantis_old2marker_tag
 		/scoreboard players tag @e[type=area_effect_cloud,tag=xiantis_oldmarker_tag] remove xiantis_oldmarker_tag
 		/scoreboard players tag @e[type=area_effect_cloud,tag=xiantis_newmarker_tag] add xiantis_oldmarker_tag
