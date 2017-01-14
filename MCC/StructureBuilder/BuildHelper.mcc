@@ -3,7 +3,7 @@ $clone_to_z=		-9
 $clone_from_x=	25
 $clone_from_z=	-9
 
-$aecDuration=100
+$aecDuration=200
 
 
 /*
