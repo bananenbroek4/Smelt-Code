@@ -31,9 +31,9 @@ $markerTags=Duration:2147483647
 >{"type":"repeating-chain","auto":true}
 	!loop+ BH_ScannerSpawn
 
-	/scoreboard players tag @e[name=plugin_LoopMarker_BH_ScannerSpawn] remove BH_TemplateScannerPresence
-	/execute @e[name=BH_TemplateScanner] ~ ~ ~ /scoreboard players tag @e[name=plugin_LoopMarker_BH_ScannerSpawn] add BH_TemplateScannerPresence
-	/testfor @e[name=plugin_LoopMarker_BH_ScannerSpawn,tag=!BH_TemplateScannerPresence]
+	/scoreboard players tag @e[name=Loop_BH_ScannerSpawn] remove BH_TemplateScannerPresence
+	/execute @e[name=BH_TemplateScanner] ~ ~ ~ /scoreboard players tag @e[name=Loop_BH_ScannerSpawn] add BH_TemplateScannerPresence
+	/testfor @e[name=Loop_BH_ScannerSpawn,tag=!BH_TemplateScannerPresence]
 >{"conditional":true}
 	!stop_loop+ BH_ScannerSpawn
 >{"conditional":false}	
@@ -43,9 +43,9 @@ $markerTags=Duration:2147483647
 	/execute @e[name=BH_StructureSpawner,tag=BH_Old] ~ ~ ~ /kill @e[dx=0,name=BH_StructureSpawner,tag=BH_SpawnedIn]
 	/execute @e[name=BH_StructureSpawner,tag=BH_Old2] ~ ~ ~ /kill @e[dx=0,name=BH_StructureSpawner,tag=BH_SpawnedIn]
 
-	/execute @e[name=BH_TemplateScanner,tag=BH_New] ~ ~ ~ /execute @e[r=0,c=1,tag=BH_SpawnedScanners] ~ ~ ~ /scoreboard players tag @e[name=plugin_LoopMarker_BH_ScannerSpawn] add BH_SpawningScanners
-	/execute @e[name=BH_TemplateScanner,tag=BH_New] ~ ~ ~ /execute @e[r=0,c=1,name=BH_TemplateScanner,tag=!BH_SpawnedScanners] ~ ~ ~ /scoreboard players tag @e[name=plugin_LoopMarker_BH_ScannerSpawn] remove BH_SpawningScanners
->{"executeAs":"@e[name=plugin_LoopMarker_BH_ScannerSpawn,tag=BH_SpawningScanners]"}
+	/execute @e[name=BH_TemplateScanner,tag=BH_New] ~ ~ ~ /execute @e[r=0,c=1,tag=BH_SpawnedScanners] ~ ~ ~ /scoreboard players tag @e[name=Loop_BH_ScannerSpawn] add BH_SpawningScanners
+	/execute @e[name=BH_TemplateScanner,tag=BH_New] ~ ~ ~ /execute @e[r=0,c=1,name=BH_TemplateScanner,tag=!BH_SpawnedScanners] ~ ~ ~ /scoreboard players tag @e[name=Loop_BH_ScannerSpawn] remove BH_SpawningScanners
+>{"executeAs":"@e[name=Loop_BH_ScannerSpawn,tag=BH_SpawningScanners]"}
 	/scoreboard players tag @e[tag=BH_Old] add BH_Old2
 	/scoreboard players tag @e[tag=BH_Old] remove BH_Old
 	/scoreboard players tag @e[tag=BH_New] add BH_Old
@@ -101,9 +101,9 @@ $markerTags=Duration:2147483647
 	/title @p times 1 1 1
 	/title @p actionbar [{"text":"Looping"}]
 
-	/scoreboard players tag @e[name=plugin_LoopMarker_BH_StructureTransfer] remove BH_NoTemplateScannersLeft
-	/execute @e[name=BH_TemplateScanner] ~ ~ ~ /scoreboard players tag @e[name=plugin_LoopMarker_BH_StructureTransfer] add BH_NoTemplateScannersLeft
-	/testfor @e[name=plugin_LoopMarker_BH_StructureTransfer,tag=!BH_NoTemplateScannersLeft]
+	/scoreboard players tag @e[name=Loop_BH_StructureTransfer] remove BH_NoTemplateScannersLeft
+	/execute @e[name=BH_TemplateScanner] ~ ~ ~ /scoreboard players tag @e[name=Loop_BH_StructureTransfer] add BH_NoTemplateScannersLeft
+	/testfor @e[name=Loop_BH_StructureTransfer,tag=!BH_NoTemplateScannersLeft]
 >{"conditional":true}
 	!stop_loop+ BH_StructureTransfer
 >{"conditional":false}

@@ -10,7 +10,7 @@ var StopLoop_Plus =
 	{
 		
 		var name = smelt.args[0];
-		smelt.addCommandBlock("/execute @e[name=plugin_LoopMarker_" + name + ",type=area_effect_cloud] ~ ~ ~ /blockdata ~ ~ ~ {auto:0b}", {type:"chain",auto:true});
+		smelt.addCommandBlock("/execute @e[name=Loop_" + name + ",type=area_effect_cloud] ~ ~ ~ /blockdata ~ ~ ~ {auto:0b}", {type:"chain",auto:true});
 		
 	}
 }
