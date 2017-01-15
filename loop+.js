@@ -16,7 +16,7 @@ var Loop_Plus =
 		var name = smelt.args[0];
 		if(name)
 		{	
-			var entityName = util.format("plugin_LoopMarker_%s", name);
+			var entityName = util.format("Loop_%s", name);
 
 			var event_Location_X	= smelt.getCurrentCommandBlock().x;
 			var event_Location_Y	= smelt.getCurrentCommandBlock().y;

@@ -10,8 +10,8 @@ var StartEvent_Plus =
 	{
 		
 		var name = smelt.args[0];
-		smelt.addCommandBlock("/execute @e[name=plugin_EventMarker_" + name + ",type=area_effect_cloud] ~ ~ ~ /blockdata ~ ~ ~ {auto:1b}", {conditional:true,type:"chain",auto:true});
-		smelt.addCommandBlock("/execute @e[name=plugin_EventMarker_" + name + ",type=area_effect_cloud] ~ ~ ~ /blockdata ~ ~ ~ {auto:0b}", {conditional:true,type:"chain",auto:true});
+		smelt.addCommandBlock("/execute @e[name=Event_" + name + ",type=area_effect_cloud] ~ ~ ~ /blockdata ~ ~ ~ {auto:1b}", {conditional:true,type:"chain",auto:true});
+		smelt.addCommandBlock("/execute @e[name=Event_" + name + ",type=area_effect_cloud] ~ ~ ~ /blockdata ~ ~ ~ {auto:0b}", {conditional:true,type:"chain",auto:true});
 		
 	}
 }
