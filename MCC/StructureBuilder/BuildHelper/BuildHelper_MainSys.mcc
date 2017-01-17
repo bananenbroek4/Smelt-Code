@@ -51,12 +51,12 @@ $aecDuration=200
 			/execute @e[name=x_spawnstructure] ~ ~ ~ /playsound block.note.bass master @p
 		>{"conditional":false}
 
-	//scoreboard objectives remove x_samematerial
+	/scoreboard objectives remove x_samematerial
 
 	/execute @r[type=armor_stand,name=x_template,tag=x_samematerial] ~ ~ ~ /summon area_effect_cloud ~ ~ ~ {CustomName:"x_TS",Small:1,Marker:1,NoGravity:1,Tags:["x_new","x_spwnscan","x_lastcycle"],Duration:$aecDuration}
 	/execute @e[name=x_TS] ~ ~ ~ /execute @e[name=x_spawnstructure] ~ ~ ~ /summon area_effect_cloud ~ ~ ~ {CustomName:"x_SS",Small:1,Marker:1,NoGravity:1,Tags:["x_new"],Duration:$aecDuration}
 	/kill @e[name=x_spawnstructure]
-	//scoreboard players tag @e[name=x_spawnstructure,tag=x_transferstructure] add x_transferredstructure
+	/execute @e[tag=eventloop+,type=area_effect_cloud] ~ ~ ~ detect ~ ~ ~ air * /kill @e[c=1,r=0,type=area_effect_cloud,tag=eventloop+]
 	
 >{"executeAs":"@e[name=x_TS]"}
 	/scoreboard objectives add x_x dummy

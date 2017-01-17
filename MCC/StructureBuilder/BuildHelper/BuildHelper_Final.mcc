@@ -113,6 +113,7 @@ $aecDuration=200
 	/execute @e[name=x_SS,tag=x_spwnscan] ~ ~ ~ /execute @e[c=1,r=0,tag=!x_nogonegx] ~-1 ~ ~ /summon area_effect_cloud ~ ~ ~ {Duration:$aecDuration,CustomName:"x_SS",Tags:["x_spawnedin","x_thiscycle","x_thisstage","nogoposx"]}
 	/execute @e[name=x_SS,tag=x_spwnscan] ~ ~ ~ /execute @e[c=1,r=0,tag=!x_nogoposz] ~ ~ ~1 /summon area_effect_cloud ~ ~ ~ {Duration:$aecDuration,CustomName:"x_SS",Tags:["x_spawnedin","x_thiscycle","x_thisstage","nogonegz"]}
 	/execute @e[name=x_SS,tag=x_spwnscan] ~ ~ ~ /execute @e[c=1,r=0,tag=!x_nogonegz] ~ ~ ~-1 /summon area_effect_cloud ~ ~ ~ {Duration:$aecDuration,CustomName:"x_SS",Tags:["x_spawnedin","x_thiscycle","x_thisstage","nogoposz"]}
+
 	
 	/scoreboard players set @e[tag=x_thisstage] x_x 0
 	/scoreboard players set @e[tag=x_thisstage] x_z 0
