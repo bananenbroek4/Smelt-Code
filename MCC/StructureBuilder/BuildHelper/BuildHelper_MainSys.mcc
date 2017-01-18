@@ -1,9 +1,9 @@
 > { "moduleStartX": 1, "moduleStartY": 0, "moduleStartZ": 1, "moduleStopX": 15, "moduleStopY": 15, "moduleStopZ": 2, "moduleBorder": 1 }
 
-$clone_to_x=		25
-$clone_to_z=		-9
-$clone_from_x=	25
-$clone_from_z=	-9
+$clone_to_x=		<x>
+$clone_to_z=		<z>
+$clone_from_x=	<x>
+$clone_from_z=	<z>
 
 $aecDuration=200
 
@@ -27,7 +27,7 @@ $aecDuration=200
 	/scoreboard players tag @e[name=x_spawnstructure,tag=x_transferstructure] add x_transferredstructure
 >{"conditional":false}
 	/scoreboard players tag @e[name=x_template] remove x_onAir
-	/execute @e[name=x_template] ~ ~ ~ detect ~ ~-1 ~ air * /scoreboard players tag @e[dx=0,name=x_template] add x_onAir
+	/execute @e[name=x_template,type=armor_stand] ~ ~ ~ detect ~ ~-1 ~ air * /scoreboard players tag @e[dx=0,name=x_template] add x_onAir
 	/kill @e[name=x_template,type=armor_stand,tag=x_onAir]
 	/kill @e[name=x_spawnstructure,tag=!x_transferstructure]
 
