@@ -1,6 +1,6 @@
 
-$clone_to_x=		<x>
-$clone_to_z=		<z>
+$clone_to_x=	<x>
+$clone_to_z=	<z>
 $clone_from_x=	<x>
 $clone_from_z=	<z>
 
@@ -23,10 +23,11 @@ $aecDuration=200
 # init message
 >{"type":"impulse","auto":true}
 	/tellraw @p [{"text":"[Installation]: ","color":"dark_aqua"},{"text":"Step 1 of 2 complete!","color":"gray"}]
+	!start_event+ x_destroyModule
+	/playsound entity.player.levelup master @p ~ ~ ~ 1 1.5
 /*
 # space
->{"type":"impulse","auto":true}
-	/searge
+>{"type":"impulse","auto":true} armor_stand
 */
 
 # starting condition
@@ -49,7 +50,7 @@ $aecDuration=200
 	/kill @e[name=x_spawnstructure,tag=!x_transferstructure]
 
 >{"type":"impulse-chain","conditional":false}
-!event+ x_initiatetransfer TemplateManager TemplateManager
+!event+ x_initiatetransfer TemplateManager
 	/execute @e[name=x_spawnstructure] ~ ~ ~ /fill ~ ~ ~ ~ ~ ~ air 0 replace command_block *
 
 	/scoreboard objectives add x_samematerial dummy
@@ -107,21 +108,26 @@ $aecDuration=200
 
 >{"type":"impulse-chain","conditional":false}
 	!event+ x_INITfinishinstallation TemplateManager
+	/playsound entity.player.levelup master @p ~ ~ ~ 1 2
 	!moduleMarker $moduleStartX $moduleStartY $moduleStartZ x_moduleMarker
 	/tellraw @p [{"text":"[Installation]: ","color":"dark_aqua"},{"text":"Step 2 of 2 complete!","color":"gray"}]
 	/tellraw @p [{"text":"[Template Manager]: ","color":"aqua"},{"text":"Module has been installed!","color":"gray"}]
 	!moduleContainer $moduleStartX $moduleStartY $moduleStartZ $moduleStopX $moduleStopY $moduleStopZ iron_block 0 stained_glass 11
-	!containerSign $moduleStartX $moduleStartY $moduleStartZ 0 1 1 facing=west {\"text\":\"-*+*-\",\"color\":\"white\"} {\"text\":\"Template\",\"color\":\"red\"} {\"text\":\"Manager\",\"color\":\"red\"} {\"text\":\"-*+*-\",\"color\":\"white\"}
+	!containerSign $moduleStartX $moduleStartY $moduleStartZ 0 0 0 facing=west {\"text\":\"-*+*-\",\"color\":\"black\"} {\"text\":\"Developed%20by\",\"color\":\"aqua\"} {\"text\":\"bananenbroek4\",\"color\":\"dark_blue\"} {\"text\":\"-*+*-\",\"color\":\"black\"}
+	!containerSign $moduleStartX $moduleStartY $moduleStartZ 0 1 1 facing=west {\"text\":\"-*+*-\",\"color\":\"white\"} {\"text\":\"Xiantis\",\"color\":\"aqua\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/tellraw%20@p%20[{\\\"text\\\":\\\"Visit%20\\\",\\\"color\\\":\\\"aqua\\\"},{\\\"text\\\":\\\"www.xiantis.net\\\",\\\"underlined\\\":\\\"true\\\",\\\"color\\\":\\\"dark_aqua\\\",\\\"clickEvent\\\":{\\\"action\\\":\\\"open_url\\\",\\\"value\\\":\\\"https://xiantis.net/\\\"}},{\\\"text\\\":\\\"%20for%20more%20information!\\\",\\\"color\\\":\\\"aqua\\\"}]\"}} {\"text\":\"Template%20Manager\",\"color\":\"dark_blue\"} {\"text\":\"-*+*-\",\"color\":\"white\"}
 	!containerSign $moduleStartX $moduleStartY $moduleStartZ 0 1 2 facing=west {\"text\":\"-*+*-\",\"color\":\"white\"} {\"text\":\"Give\",\"color\":\"dark_red\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/execute%20@e[name=Event_x_giveItems,type=area_effect_cloud]%20~%20~%20~%20/blockdata%20~%20~%20~%20{auto:1b}\"}} {\"text\":\"Items\",\"color\":\"dark_red\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/execute%20@e[name=Event_x_giveItems,type=area_effect_cloud]%20~%20~%20~%20/blockdata%20~%20~%20~%20{auto:0b}\"}} {\"text\":\"-*+*-\",\"color\":\"white\"}
-	!containerSign $moduleStartX $moduleStartY $moduleStartZ 0 0 0 facing=west {\"text\":\"-*+*-\",\"color\":\"black\"} {\"text\":\"Destroy\",\"color\":\"dark_red\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/execute%20@e[name=Event_x_destroyModule,type=area_effect_cloud]%20~%20~%20~%20/blockdata%20~%20~%20~%20{auto:1b}\"}} {\"text\":\"Module\",\"color\":\"dark_red\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/execute%20@e[name=Event_x_destroyModule,type=area_effect_cloud]%20~%20~%20~%20/blockdata%20~%20~%20~%20{auto:0b}\"}} {\"text\":\"-*+*-\",\"color\":\"black\"}
+	!containerSign $moduleStartX $moduleStartY $moduleStartZ 0 0 3 facing=west {\"text\":\"-*+*-\",\"color\":\"black\"} {\"text\":\"Destroy\",\"color\":\"dark_red\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/execute%20@e[name=Event_x_destroyModule,type=area_effect_cloud]%20~%20~%20~%20/blockdata%20~%20~%20~%20{auto:1b}\"}} {\"text\":\"Module\",\"color\":\"dark_red\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/execute%20@e[name=Event_x_destroyModule,type=area_effect_cloud]%20~%20~%20~%20/blockdata%20~%20~%20~%20{auto:0b}\"}} {\"text\":\"-*+*-\",\"color\":\"black\"}
 
 
 >{"type":"impulse-chain","auto":true}
 	!event+ x_giveItems
-	/give @p command_block 1 0 {display:{Name:"[TM] Create Template"},BlockEntityTag:{Command:"/summon area_effect_cloud ~ ~ ~ {Duration:2147483647,Particle:\"take\",CustomName:\"x_template\"}",auto:1b}}
+	/give @p command_block 1 0 {display:{Name:"[TM] Create Template"},BlockEntityTag:{Command:"/summon area_effect_cloud ~ ~ ~ {Duration:2147483647,Particle:\"crit\",CustomName:\"x_template\",Radius:0.01f}",auto:1b}}
 	/give @p command_block 1 0 {display:{Name:"[TM] Spawn Structure"},BlockEntityTag:{Command:"/summon area_effect_cloud ~ ~ ~ {Duration:2147483647,Particle:\"take\",CustomName:\"x_spawnstructure\"}",auto:1b}}
 
 >{"type":"impulse-chain","auto":true}
 	!event+ x_destroyModule
+	/execute @e[name=x_moduleMarker] ~ ~ ~ /tellraw @p [{"text":"[Template Manager]: ","color":"aqua"},{"text":"Module has been uninstalled!","color":"red"}]
 	!destroyModule $moduleStartX $moduleStartY $moduleStartZ $moduleStopX $moduleStopY $moduleStopZ x_moduleMarker
-	/tellraw @p [{"text":"[Template Manager]: ","color":"aqua"},{"text":"Module has been uninstalled!","color":"red"}]
+	/kill @e[name=x_template]
+
+//tellraw%20@p%20[{\\\"text\\\":\\\"Visit%20\\\",\\\"color\\\":\\\"aqua\\\"},{\\\"text\\\":\\\"www.xiantis.net\\\",\\\"underlined\\\":\\\"true\\\",\\\"color\\\":\\\"dark_aqua\\\",\\\"clickEvent\\\":{\\\"action\\\":\\\"open_url\\\",\\\"value\\\":\\\"https://xiantis.net/\\\"}},{\\\"text\\\":\\\"%20for%20more%20information!\\\",\\\"color\\\":\\\"aqua\\\"}]

@@ -2,12 +2,16 @@ TODO WHEN UPDATING EACH VERSION:
 - Remove all named AEC's (e.g. system.mcc, etc...)
 
 TODO FOR MainSys.oc:
+- Make it spawn 2 blocks in x direction
 - Above
+- Add "{Block:redstone_block,Time:1,Passengers:[{id:falling_block," in place of first curly bracket in command
 
 TODO FOR Final.oc:
+- Make it spawn 2 blocks in x direction
 - Add "{id:commandblock_minecart,Command:"/fill ~1 ~-1 ~-1 ~16 ~8 ~2 iron_block 0 replace air"},{id:commandblock_minecart,Command:"/fill ~1 ~0 ~0 ~16 ~7 ~1 stained_glass 11 replace iron_block"}," behind "{id:commandblock_minecart,Command:"kill @e[type=commandblock_minecart,r=0]"}" and in front of ","
 - Add "{Block:redstone_block,Time:1,Passengers:[{id:falling_block," in place of first curly bracket in command
 - Enclose other side of command with "]}"
 - Remove names
 - Add the following in the same place as the first step:
 	- "{id:commandblock_minecart,Command:"/summon item_frame ~ ~1 ~ {Facing:1b,Item:{id:\"minecraft:command_block\",Count:1b,tag:{BlockEntityTag:{conditionMet:1b,auto:1b,powered:0b,Command:\"/summon armor_stand ~ ~ ~ {CustomName:\\\"x_spawnstructure\\\",NoGravity:1,Marker:1,Invisible:1,Small:1}\",id:\"minecraft:command_block\",SuccessCount:0,TrackOutput:1b},display:{Name:\"[BH] Spawn Structure\"}},Damage:0s}}"},{id:commandblock_minecart,Command:"/summon item_frame ~ ~1 ~1 {Facing:1b,Item:{id:\"minecraft:command_block\",Count:1b,tag:{BlockEntityTag:{conditionMet:1b,auto:1b,powered:0b,Command:\"/summon armor_stand ~ ~ ~ {CustomName:\\\"x_template\\\",NoGravity:1,Marker:1,Small:1}\",id:\"minecraft:command_block\",SuccessCount:0,TrackOutput:1b},display:{Name:\"[BH] Create Template\"}},Damage:0s}}"},"
+	- "{id:commandblock_minecart,Command:"/setblock ~ ~ ~-1 wall_sign facing=west"},{id:commandblock_minecart,Command:"/blockdata ~ ~ ~-1 {Text1:"",Text2:"{\"text\":\"[Destroy Machine]\",\"color\":\"red\"}",Text3:"",Text4:""},{id:commandblock_minecart,Command:"/fill ~ ~-1 ~ ~ ~-1 ~-1 air 0 replace redstone_block}",

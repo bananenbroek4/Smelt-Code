@@ -1,7 +1,7 @@
 > { "moduleStartX": 4, "moduleStartY": 1, "moduleStartZ": 1, "moduleStopX": 15, "moduleStopY": 10, "moduleStopZ": 1, "moduleBorder": 0 }
 
-$clone_to_x=		<x>
-$clone_to_z=		<z>
+$clone_to_x=	<x>
+$clone_to_z=	<z>
 $clone_from_x=	<x>
 $clone_from_z=	<z>
 
