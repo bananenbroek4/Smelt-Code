@@ -1,0 +1,131 @@
+$defaultRepeat={"conditional":false,"type":"repeating","auto":true}
+$defaultChain={"conditional":false,"type":"chain","auto":true}
+$defaultImpulse={"conditional":false,"type":"impulse","auto":true}
+$conditionalRepeat={"conditional":true,"type":"repeating","auto":true}
+$conditionalChain={"conditional":true,"type":"chain","auto":true}
+$conditionalImpulse={"conditional":true,"type":"impulse","auto":true}
+$waitingRepeat={"conditional":false,"type":"repeating","auto":false}
+$waitingImpulse={"conditional":false,"type":"impulse","auto":false}
+
+$IceRunners_HexagonBaseArea_CloneFrom=-62 4 -62 -52 5 -52
+$IceRunners_HexagonBaseArea_CloneTo=-62 6 -62
+$IceRunners_Template_CloneTo=-60 6 -60
+$IceRunners_SavePrototypeHexagonTile_Coordinates=-63 5 -62
+
+$IceRunners_Entity_HexTile=name=IceRunners_HexTile,type=area_effect_cloud
+$IceRunners_Coordinates_MapCenter=-193 19 2984
+
+$IceRunners_Tellraw_Prefix={"text":"[","color":"dark_aqua"},{"text":"Ice Runners","color":"aqua"},{"text":"]: ","color":"dark_aqua"}
+
+	/* TODO:
+		- Make arena size depend on in-game players
+	*/
+
+# IceRunners_StartGame
+	!event Event_IceRunners_StartGame
+	>$defaultChain
+	!start_event Event_IceRunners_Generation_Initialize
+	/tellraw @a[x=-300,y=0,z=2700,dx=600,dy=200,dz=600] [$IceRunners_Tellraw_Prefix,{"text":"Generating map...","color":"yellow"}]
+
+
+# IceRunners_Generation_Initialize
+	!event Event_IceRunners_Generation_Initialize
+	>$defaultChain
+	/time set 6000
+	/execute @e[$IceRunners_Entity_HexTile] ~ ~ ~ /fill ~-5 19 ~-5 ~5 20 ~5 water 0
+	/execute @e[$IceRunners_Entity_HexTile] ~ ~ ~ /fill ~-5 21 ~-5 ~5 36 ~5 air 0
+
+	/execute @e[$IceRunners_Entity_HexTile] ~-5 ~ ~-5 /kill @e[type=!player,dx=10,dy=5,dz=10]
+
+	/summon area_effect_cloud $IceRunners_Coordinates_MapCenter {CustomName:"IceRunners_HexTile",Duration:2147483647,Particle:"take"}
+
+	!start_loop Loop_IceRunners_Generation_GenerateTiles
+
+	// Queue players in game lobby for game
+	/scoreboard players tag @a[x=-300,y=0,z=2700,dx=600,dy=200,dz=600,m=2] add IceRunners_InGame
+	/scoreboard players set @e[tag=IceRunners_InGame] IceRunners_Score 0
+	/scoreboard players set GenerationTimer dummyCounter 0
+	/execute @a[tag=IceRunners_InGame] ~ ~ ~ /scoreboard players add GenerationTimer dummyCounter 1
+	
+# IceRunners_Generation_GenerateTiles
+	!loop Loop_IceRunners_Generation_GenerateTiles
+	>$defaultChain
+
+	/scoreboard players tag @r[$IceRunners_Entity_HexTile,tag=!IceRunners_HasBeenChosen] add IceRunners_CreateTileFromLocation
+	
+	$eastSpread=~10 ~ ~
+	$westSpread=~-10 ~ ~
+	$southEastSpread=~5 ~ ~8
+	$southWestSpread=~-5 ~ ~8
+	$northWestSpread=~-5 ~ ~-8
+	$northEastSpread=~5 ~ ~-8
+
+	$eastDetect=~10 0 ~
+	$westDetect=~-10 0 ~
+	$southEastDetect=~5 0 ~8
+	$southWestDetect=~-5 0 ~8
+	$northWestDetect=~-5 0 ~-8
+	$northEastDetect=~5 0 ~-8
+
+	/execute @e[$IceRunners_Entity_HexTile,tag=IceRunners_CreateTileFromLocation] ~ ~ ~ detect $eastDetect stained_glass * /summon area_effect_cloud $eastSpread {CustomName:"IceRunners_HexTile",Duration:2147483647,Particle:"take",Tags:["IceRunners_CheckTile"]}
+	/execute @e[$IceRunners_Entity_HexTile,tag=IceRunners_CreateTileFromLocation] ~ ~ ~ detect $westDetect stained_glass * /summon area_effect_cloud $westSpread {CustomName:"IceRunners_HexTile",Duration:2147483647,Particle:"take",Tags:["IceRunners_CheckTile"]}
+	/execute @e[$IceRunners_Entity_HexTile,tag=IceRunners_CreateTileFromLocation] ~ ~ ~ detect $southEastDetect stained_glass * /summon area_effect_cloud $southEastSpread {CustomName:"IceRunners_HexTile",Duration:2147483647,Particle:"take",Tags:["IceRunners_CheckTile"]}
+	/execute @e[$IceRunners_Entity_HexTile,tag=IceRunners_CreateTileFromLocation] ~ ~ ~ detect $southWestDetect stained_glass * /summon area_effect_cloud $southWestSpread {CustomName:"IceRunners_HexTile",Duration:2147483647,Particle:"take",Tags:["IceRunners_CheckTile"]}
+	/execute @e[$IceRunners_Entity_HexTile,tag=IceRunners_CreateTileFromLocation] ~ ~ ~ detect $northWestDetect stained_glass * /summon area_effect_cloud $northWestSpread {CustomName:"IceRunners_HexTile",Duration:2147483647,Particle:"take",Tags:["IceRunners_CheckTile"]}
+	/execute @e[$IceRunners_Entity_HexTile,tag=IceRunners_CreateTileFromLocation] ~ ~ ~ detect $northEastDetect stained_glass * /summon area_effect_cloud $northEastSpread {CustomName:"IceRunners_HexTile",Duration:2147483647,Particle:"take",Tags:["IceRunners_CheckTile"]}
+
+	/execute @e[$IceRunners_Entity_HexTile,tag=!IceRunners_CheckTile] ~ 0 ~ /kill @e[$IceRunners_Entity_HexTile,tag=IceRunners_CheckTile,dy=100]
+	/scoreboard players tag @e[$IceRunners_Entity_HexTile,tag=IceRunners_CheckTile] remove IceRunners_CheckTile
+
+	/scoreboard players tag @e[$IceRunners_Entity_HexTile,tag=IceRunners_CreateTileFromLocation] add IceRunners_HasBeenChosen
+	/scoreboard players tag @e[$IceRunners_Entity_HexTile,tag=IceRunners_CreateTileFromLocation] remove IceRunners_CreateTileFromLocation
+
+	/scoreboard players test GenerationTimer dummyCounter 0 1
+	>$conditionalChain
+		!stop_loop Loop_IceRunners_Generation_GenerateTiles
+		!start_loop IceRunners_Generation_GenerateHexagonTile
+	>$defaultChain
+	/scoreboard players remove GenerationTimer dummyCounter 1
+
+# IceRunners_Generation_GenerateHexagonTile
+	!loop IceRunners_Generation_GenerateHexagonTile
+	>$defaultChain
+
+	// Repair Hexagonbase
+	/clone $IceRunners_HexagonBaseArea_CloneFrom $IceRunners_HexagonBaseArea_CloneTo replace normal
+
+	// Clone StructureTemplate to HexagonTemplate
+	/scoreboard players tag @r[type=armor_stand,name=IceRunners_Template] add IceRunners_ChosenTemplate
+	/execute @e[tag=IceRunners_ChosenTemplate,name=IceRunners_Template] ~ ~ ~ /clone ~ ~ ~ ~6 ~15 ~6 $IceRunners_Template_CloneTo
+	/scoreboard players tag @e[name=IceRunners_Template,tag=IceRunners_ChosenTemplate] remove IceRunners_ChosenTemplate
+
+	!PasteRotatedStructure -60 6 -60 -54 37 -54 -63 4 -62 IR_HexTile
+
+	/fill -62 6 -62 -52 7 -52 frosted_ice 0 replace stained_glass color=white
+	/fill -62 6 -62 -52 7 -52 frosted_ice 1 replace stained_glass color=light_blue
+	/fill -62 6 -62 -52 7 -52 frosted_ice 0 replace stained_glass color=cyan
+	/fill -62 6 -62 -52 7 -52 frosted_ice 3 replace stained_glass color=blue
+
+	/fill -62 6 -62 -52 7 -52 water 0 replace stained_glass color=black
+
+	/setblock -64 4 -62 redstone_block 0
+	/setblock -64 4 -62 stained_hardened_clay color=lime
+
+	/setblock $IceRunners_SavePrototypeHexagonTile_Coordinates redstone_block 0
+	/setblock $IceRunners_SavePrototypeHexagonTile_Coordinates stained_hardened_clay color=lime
+
+	/scoreboard players tag @r[$IceRunners_Entity_HexTile,tag=!IceRunners_HasBeenPopulated] add IceRunners_PopulateTile
+	/execute @e[$IceRunners_Entity_HexTile,tag=IceRunners_PopulateTile] ~ ~ ~ /setblock ~ ~ ~ structure_block 0 replace {name:"IR_HexTile",mode:"LOAD",posX:-5,posY:0,posZ:-5}
+	/execute @e[$IceRunners_Entity_HexTile,tag=IceRunners_PopulateTile] ~ ~ ~ /setblock ~ ~-1 ~ redstone_block 0
+	/execute @e[$IceRunners_Entity_HexTile,tag=IceRunners_PopulateTile] ~ ~ ~ /setblock ~ ~-1 ~ water 0
+	/scoreboard players tag @e[$IceRunners_Entity_HexTile,tag=IceRunners_PopulateTile] add IceRunners_HasBeenPopulated
+	/scoreboard players tag @e[$IceRunners_Entity_HexTile,tag=IceRunners_PopulateTile] remove IceRunners_PopulateTile
+
+	/scoreboard players set PopulateHexQueue dummyCounter 0
+	/execute @e[$IceRunners_Entity_HexTile,tag=!IceRunners_HasBeenPopulated] ~ ~ ~ /scoreboard players add PopulateHexQueue dummyCounter 1
+
+	/scoreboard players test PopulateHexQueue dummyCounter 0 2
+	>$conditionalChain
+		!stop_loop IceRunners_Generation_GenerateHexagonTile
+		!start_loop IceRunners_StartCountdown
+		/scoreboard players set IceRunners_Countdown dummyCounter 201

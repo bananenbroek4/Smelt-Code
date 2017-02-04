@@ -1,0 +1,196 @@
+$defaultRepeat={"conditional":false,"type":"repeating","auto":true,"executeAs":""}
+$defaultChain={"conditional":false,"type":"chain","auto":true,"executeAs":""}
+$defaultImpulse={"conditional":false,"type":"impulse","auto":true,"executeAs":""}
+$conditionalRepeat={"conditional":true,"type":"repeating","auto":true,"executeAs":""}
+$conditionalChain={"conditional":true,"type":"chain","auto":true,"executeAs":""}
+$conditionalImpulse={"conditional":true,"type":"impulse","auto":true,"executeAs":""}
+$waitingRepeat={"conditional":false,"type":"repeating","auto":false,"executeAs":""}
+$waitingImpulse={"conditional":false,"type":"impulse","auto":false,"executeAs":""}
+
+$musicBlock=4 4 20
+
+# IceRunners_FindSpawnLocation
+	!loop IceRunners_FindSpawnLocation
+	>$defaultChain
+	/execute @e[name=IceRunners_SpawnMarker,tag=IceRunners_SearchForSpawnLocation] ~ ~ ~ /spreadplayers -195 2983 5 20 false @e[name=IceRunners_SpawnMarker]
+	/tp @e[name=IceRunners_SpawnMarker,tag=IceRunners_SearchForSpawnLocation] ~ 21 ~
+	/execute @e[name=IceRunners_SpawnMarker,tag=IceRunners_SearchForSpawnLocation] ~ ~ ~ detect ~ 20 ~ frosted_ice * /scoreboard players tag @e[name=IceRunners_SpawnMarker] add IceRunners_FoundSpawnLocation
+	>$conditionalChain
+	>{"executeAs":"@e[name=IceRunners_SpawnMarker,tag=IceRunners_FoundSpawnLocation]"}
+		/scoreboard players tag @r[x=-300,y=0,z=2700,dx=600,dy=200,dz=600,m=2,tag=!IceRunners_SpawnedIntoGame] add IceRunners_SpawnIntoGame
+		>{"conditional":false}
+		/scoreboard players tag @a[tag=IceRunners_SpawnIntoGame] remove IceRunners_DoSpawnIntoGame
+		/scoreboard players tag @a[tag=IceRunners_SpawnIntoGame] remove IceRunners_SpawnedIntoGame
+		/execute @e[name=IceRunners_SpawnMarker,tag=IceRunners_FoundSpawnLocation] ~ ~ ~ /teleport @a[tag=IceRunners_SpawnIntoGame,m=2] ~ ~.25 ~
+		/scoreboard players tag @a[tag=IceRunners_SpawnIntoGame] add IceRunners_SpawnedIntoGame
+		/scoreboard players tag @a[tag=IceRunners_SpawnIntoGame] remove IceRunners_SpawnIntoGame
+
+	>$defaultChain
+	
+	/scoreboard players tag @e[name=IceRunners_SpawnMarker,tag=IceRunners_FoundSpawnLocation] remove IceRunners_FoundSpawnLocation
+
+# IceRunners_StartCountdown
+	!loop IceRunners_StartCountdown
+	>$defaultChain
+
+	/scoreboard players test IceRunners_Countdown dummyCounter 201 201
+	>$conditionalChain
+		/scoreboard teams option IceRunners friendlyfire false
+		/tellraw @a[tag=IceRunners_InGame] [{"text":"=============== ","color":"white"},{"text":"How To Play","color":"red"},{"text":" ===============\n","color":"white"}]
+		/tellraw @a[tag=IceRunners_InGame] [{"text":"Be the last player standing on the melting ice! Falling into the water will knock you out of the game!","color":"dark_green"}]
+		!start_loop IceRunners_FindSpawnLocation
+		/title @a[tag=IceRunners_InGame] times 5 200 5
+		/title @a[tag=IceRunners_InGame] title [{"text":"Get ready!","color":"dark_green"}]
+		/summon armor_stand -200 0 3000 {CustomName:"IceRunners_SpawnMarker",NoGravity:1,Tags:["IceRunners_SearchForSpawnLocation","IceRunners_Entity"],Invisible:1b}
+		/scoreboard players reset * IceRunners_Score
+		/scoreboard players set @a[tag=IceRunners_InGame] IceRunners_Score 0
+		/scoreboard teams join IceRunners @a[tag=IceRunners_InGame]
+		/scoreboard players tag @a[tag=IceRunners_InGame] add IceRunners_DoSpawnIntoGame
+		/setblock $musicBlock minecraft:emerald_block
+		/scoreboard players tag @a[tag=IceRunners_InGame] remove IceRunners_SpawnedIntoGame
+		
+	>$defaultChain
+
+	/scoreboard players test IceRunners_Countdown dummyCounter 1 300
+	>$conditionalChain
+		/scoreboard players remove IceRunners_Countdown dummyCounter 1
+	>$defaultChain
+	/scoreboard players test IceRunners_Countdown dummyCounter 200 200
+	>$conditionalChain
+		/title @a[tag=IceRunners_InGame] subtitle [{"text":"Game starting in ","color":"dark_green"},{"text":"10 ","color":"dark_red","bold":true},{"text":"seconds!","color":"dark_green"}]
+		/execute @a[tag=IceRunners_InGame] ~ ~ ~ /playsound block.note.snare ambient @p ~ ~ ~ 0.5 1.5
+	>$defaultChain
+	/scoreboard players test IceRunners_Countdown dummyCounter 180 180
+	>$conditionalChain
+		/title @a[tag=IceRunners_InGame] subtitle [{"text":"Game starting in ","color":"dark_green"},{"text":"9 ","color":"dark_red","bold":true},{"text":"seconds!","color":"dark_green"}]
+		/execute @a[tag=IceRunners_InGame] ~ ~ ~ /playsound block.note.snare ambient @p ~ ~ ~ 0.5 1.5
+		/scoreboard players set @e[tag=icerunners_music,name=counterstand] timer1 1
+	>$defaultChain
+	/scoreboard players test IceRunners_Countdown dummyCounter 160 160
+	>$conditionalChain
+		/title @a[tag=IceRunners_InGame] subtitle [{"text":"Game starting in ","color":"dark_green"},{"text":"8 ","color":"dark_red","bold":true},{"text":"seconds!","color":"dark_green"}]
+		/execute @a[tag=IceRunners_InGame] ~ ~ ~ /playsound block.note.snare ambient @p ~ ~ ~ 0.5 1.5
+	>$defaultChain
+	/scoreboard players test IceRunners_Countdown dummyCounter 140 140
+	>$conditionalChain
+		/title @a[tag=IceRunners_InGame] subtitle [{"text":"Game starting in ","color":"dark_green"},{"text":"7 ","color":"dark_red","bold":true},{"text":"seconds!","color":"dark_green"}]
+		/execute @a[tag=IceRunners_InGame] ~ ~ ~ /playsound block.note.snare ambient @p ~ ~ ~ 0.5 1.5
+	>$defaultChain
+	/scoreboard players test IceRunners_Countdown dummyCounter 120 120
+	>$conditionalChain
+		/title @a[tag=IceRunners_InGame] subtitle [{"text":"Game starting in ","color":"dark_green"},{"text":"6 ","color":"dark_red","bold":true},{"text":"seconds!","color":"dark_green"}]
+		/execute @a[tag=IceRunners_InGame] ~ ~ ~ /playsound block.note.snare ambient @p ~ ~ ~ 0.5 1.5
+	>$defaultChain
+	/scoreboard players test IceRunners_Countdown dummyCounter 100 100
+	>$conditionalChain
+		/title @a[tag=IceRunners_InGame] subtitle [{"text":"Game starting in ","color":"dark_green"},{"text":"5 ","color":"dark_red","bold":true},{"text":"seconds!","color":"dark_green"}]
+		/execute @a[tag=IceRunners_InGame] ~ ~ ~ /playsound block.note.snare ambient @p ~ ~ ~ 0.5 1.5
+	>$defaultChain
+	/scoreboard players test IceRunners_Countdown dummyCounter 80 80
+	>$conditionalChain
+		/title @a[tag=IceRunners_InGame] subtitle [{"text":"Game starting in ","color":"dark_green"},{"text":"4 ","color":"dark_red","bold":true},{"text":"seconds!","color":"dark_green"}]
+		/execute @a[tag=IceRunners_InGame] ~ ~ ~ /playsound block.note.snare ambient @p ~ ~ ~ 0.5 1.6
+	>$defaultChain
+	/scoreboard players test IceRunners_Countdown dummyCounter 60 60
+	>$conditionalChain
+		/title @a[tag=IceRunners_InGame] subtitle [{"text":"Game starting in ","color":"dark_green"},{"text":"3 ","color":"dark_red","bold":true},{"text":"seconds!","color":"dark_green"}]
+		/execute @a[tag=IceRunners_InGame] ~ ~ ~ /playsound block.note.snare ambient @p ~ ~ ~ 0.5 1.6
+	>$defaultChain
+	/scoreboard players test IceRunners_Countdown dummyCounter 40 40
+	>$conditionalChain
+		/title @a[tag=IceRunners_InGame] subtitle [{"text":"Game starting in ","color":"dark_green"},{"text":"2 ","color":"dark_red","bold":true},{"text":"seconds!","color":"dark_green"}]
+		/execute @a[tag=IceRunners_InGame] ~ ~ ~ /playsound block.note.snare ambient @p ~ ~ ~ 0.5 1.8
+	>$defaultChain
+	/scoreboard players test IceRunners_Countdown dummyCounter 20 20
+	>$conditionalChain
+		/title @a[tag=IceRunners_InGame] subtitle [{"text":"Game starting in ","color":"dark_green"},{"text":"1 ","color":"dark_red","bold":true},{"text":"seconds!","color":"dark_green"}]
+		/execute @a[tag=IceRunners_InGame] ~ ~ ~ /playsound block.note.snare ambient @p ~ ~ ~ 0.5 1.8
+	>$defaultChain
+	/scoreboard players test IceRunners_Countdown dummyCounter 0 0
+	>$conditionalChain
+		/scoreboard teams option IceRunners friendlyfire true
+		/execute @a[tag=IceRunners_InGame] ~ ~ ~ /playsound block.note.snare ambient @p ~ ~ ~ 0.5 2
+		/title @a[tag=IceRunners_InGame] subtitle {"text":""}
+		/title @a[tag=IceRunners_InGame] times 5 15 5
+		/title @a[tag=IceRunners_InGame] title [{"text":"Game has started!","color":"green"}]
+		!start_loop IceRunners_Engine
+		!stop_loop IceRunners_StartCountdown
+		!stop_loop IceRunners_FindSpawnLocation
+		/kill @e[name=IceRunners_SpawnMarker]
+		// Start Misc
+		!start_event IceRunners_LaunchMiscSystems
+	>$defaultChain
+
+# IceRunners_Engine
+	!loop IceRunners_Engine
+	// Keep spectators within bounds
+	/execute @a[x=-300,y=0,z=2700,dx=600,dy=200,dz=600,m=3] ~ ~ ~ detect ~ 0 ~ wool color=red /tp @p -193 ~ 2984
+	/tp @a[x=-300,y=60,z=2700,dx=600,dy=10,dz=600,m=3] ~ ~-10 ~
+	/tp @a[x=-300,y=13,z=2700,dx=600,dy=-10,dz=600,m=3] ~ 30 ~
+
+	// Calculate number of players and update player ranking score
+	/scoreboard players set IceRunners_PeoplePlaying dummyCounter 0
+	/execute @a[tag=IceRunners_InGame] ~ ~ ~ /scoreboard players add IceRunners_PeoplePlaying dummyCounter 1
+	/scoreboard players operation IceRunners_PeoplePlaying_Holder dummyCounter -= IceRunners_PeoplePlaying dummyCounter
+	/scoreboard players test IceRunners_PeoplePlaying_Holder dummyCounter 1
+	>$conditionalChain
+		/scoreboard players operation @a[tag=IceRunners_InGame] IceRunners_Score -= IceRunners_PeoplePlaying_Holder
+	>$defaultChain
+	/scoreboard players operation IceRunners_PeoplePlaying_Holder dummyCounter = IceRunners_PeoplePlaying dummyCounter
+
+	// Knock people that are below the platform out of the game
+
+	/scoreboard players tag @a[tag=IceRunners_InGame,x=-300,y=20,z=2700,dx=600,dy=-2,dz=600,m=2] add IceRunners_IsDead
+	>{"executeAs":"@a[tag=IceRunners_IsDead]"}
+		/gamemode 3 @a[tag=IceRunners_IsDead,c=1,r=0]
+		/tp @a[tag=IceRunners_IsDead,c=1,r=0] ~ 30 ~
+		/tellraw @a[tag=IceRunners_InGame] [{"selector":"@a[tag=IceRunners_IsDead]","color":"green","bold":"true"},{"text":" sunk below the ice!","color":"dark_green"}]
+		/scoreboard players add @a[tag=IceRunners_IsDead] IceRunners_Score 1
+		/scoreboard players add @a[tag=IceRunners_HasDied] IceRunners_Score 1
+		/scoreboard players tag @a[tag=IceRunners_IsDead] add IceRunners_HasDied
+		/scoreboard players tag @a[tag=IceRunners_IsDead] remove IceRunners_IsDead
+	>$defaultChain
+
+	/scoreboard players set IceRunners_PlayersAlive dummyCounter 0
+	/execute @a[tag=IceRunners_InGame] ~ ~ ~ /execute @a[c=1,r=0,tag=!IceRunners_HasDied] ~ ~ ~ /scoreboard players add IceRunners_PlayersAlive dummyCounter 1
+		// ##### TOGGLE BETWEEN THESE TWO FOR DEBUGGING
+	/scoreboard players test IceRunners_PlayersAlive dummyCounter 0 1
+	>$conditionalChain
+		/scoreboard players test IceRunners_PeoplePlaying 1
+		/scoreboard players add @a[tag=IceRunners_InGame] IceRunners_Score 1
+	>$defaultChain
+	/scoreboard players test IceRunners_PlayersAlive dummyCounter 0 1
+	>$conditionalChain
+		/scoreboard players test IceRunners_Debug dummyCounter -1 -1
+		!stop_loop IceRunners_Engine
+		!start_event IceRunners_EndGame
+	>$defaultChain
+
+
+# IceRunners_EndGame
+	!event IceRunners_EndGame
+	/setblock $musicBlock nether_wart_block
+	/setblock 30 4 20 redstone_block
+	!start_event IceRunners_DeactivateMiscSystems
+	//!start_loop IceRunners_ClearDisconnectedPlayers
+	/testfor @a[tag=IceRunners_InGame,score_IceRunners_Score=0]
+	>$conditionalChain
+		/scoreboard players add @a[tag=IceRunners_InGame] IceRunners_Score 1
+	>$defaultChain
+	/scoreboard players set @a[tag=IceRunners_InGame] Placing 0
+	/execute @a[score_IceRunners_Score_min=1,score_IceRunners_Score=3,tag=IceRunners_InGame] ~ ~ ~ /scoreboard players operation @a[r=0,c=1] Placing = @a[r=0,c=1] IceRunners_Score
+	/gamemode 2 @a[tag=IceRunners_IsDead,m=3]
+	/scoreboard players tag @a[tag=IceRunners_HasDied] remove IceRunners_HasDied
+	/scoreboard players tag @a[tag=IceRunners_IsDead] remove IceRunners_IsDead
+	/scoreboard teams leave IceRunners @a[tag=IceRunners_InGame]
+	/scoreboard players tag @a[tag=IceRunners_InGame] remove IceRunners_InGame
+	/setblock -48 4 47 redstone_block
+
+	
+	/*
+
+	- Add Score 1 to player that's died
+	- For every player that has died, add Score 1 to every player that is already dead (excluding recently dead player)
+	- When only one player is left, add Score 1 to *every* player
+	
+	*/

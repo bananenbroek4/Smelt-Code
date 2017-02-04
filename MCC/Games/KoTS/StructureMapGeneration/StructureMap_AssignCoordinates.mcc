@@ -1,0 +1,19 @@
+> { "moduleStartX": 0, "moduleStartY": 0, "moduleStartZ": 0, "moduleStopX": 32, "moduleStopY": 3, "moduleStopZ": 16, "moduleBorder": 1 }
+
+
+# SM_Generation_AssignHeight
+>{"type":"impulse-chain","conditional":false}
+	!event+ SM_Generation_AssignHeight
+	/execute @e[name=SM_LI,type=area_effect_cloud] ~ ~ ~ /scoreboard players operation @e[dx=0,name=SM_LI,type=area_effect_cloud] SM_Height = @r[type=area_effect_cloud,name=SM_RNG,tag=SM_CanChoose_LI] CONST
+	/execute @e[name=SM_SI,type=area_effect_cloud] ~ ~ ~ /scoreboard players operation @e[dx=0,name=SM_SI,type=area_effect_cloud] SM_Height = @r[type=area_effect_cloud,name=SM_RNG,tag=SM_CanChoose_SI] CONST
+	/execute @e[name=SM_BCP,type=area_effect_cloud] ~ ~ ~ /scoreboard players operation @e[dx=0,name=SM_BCP,type=area_effect_cloud] SM_Height = @r[type=area_effect_cloud,name=SM_RNG,tag=SM_CanChoose_BCP] CONST
+	/execute @e[name=SM_C,type=area_effect_cloud] ~ ~ ~ /scoreboard players operation @e[dx=0,name=SM_C,type=area_effect_cloud] SM_Height = @r[type=area_effect_cloud,name=SM_RNG,tag=SM_CanChoose_C] CONST
+
+	!structureMap_assignCoordinates -77 -77 -57 -57 25 25
+	
+	/scoreboard players tag @e[tag=SM_StructureMarker] add isListed
+	/scoreboard players tag @e[tag=SM_StructureMarker] add SM_ConvertToMM
+	/kill @e[name=MM_Marker]
+
+	!start_loop+ SM_ConvertToMinimap
+	

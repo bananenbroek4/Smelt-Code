@@ -1,0 +1,51 @@
+$defaultRepeat={"conditional":false,"type":"repeating","auto":true}
+$defaultChain={"conditional":false,"type":"chain","auto":true}
+$defaultImpulse={"conditional":false,"type":"impulse","auto":true}
+$conditionalRepeat={"conditional":true,"type":"repeating","auto":true}
+$conditionalChain={"conditional":true,"type":"chain","auto":true}
+$conditionalImpulse={"conditional":true,"type":"impulse","auto":true}
+$waitingRepeat={"conditional":false,"type":"repeating","auto":false}
+$waitingImpulse={"conditional":false,"type":"impulse","auto":false}
+$waitingChain={"conditional":false,"type":"chain","auto":false}
+
+# INITCommands
+	!event removeExistingStructures
+> $defaultChain
+	/execute @e[name=StructureMarker,tag=Structure_LargeIsland] ~ ~ ~ fill ~ ~ ~ ~30 ~30 ~30 air 0
+	/execute @e[name=StructureMarker,tag=Structure_SmallIsland] ~ ~ ~ fill ~ ~ ~ ~14 ~30 ~14 air 0
+	/kill @e[name=StructureMarker]
+	!start_loop spawnIslandStructures
+
+# SpawnStructureMarkers
+	!loop spawnIslandStructures
+> $defaultChain
+	!spawnIslandStructures 62 0
+
+	/scoreboard players tag @e[name=SpawnStructureMarkers,tag=keepLooping] remove keepLooping
+	/execute @e[tag=StructureMapMarker] ~ ~ ~ /testfor @e[tag=!spawnedInStructure,c=1,r=1]
+> $conditionalChain
+	/scoreboard players tag @e[name=SpawnStructureMarkers] add keepLooping
+>$defaultChain
+	/testfor @e[name=SpawnStructureMarkers,type=area_effect_cloud,tag=!keepLooping]
+> $conditionalChain
+	!stop_loop spawnIslandStructures
+	!start_loop CreateStructures
+	/scoreboard players set @e[name=StructureMarker] structureQueue 2
+	/scoreboard players tag @e[tag=SpawnStructureMarkers] remove spawnedInStructure
+
+# CreateStructures
+	!loop CreateStructures
+> $defaultChain
+	/scoreboard players set @r[type=armor_stand,name=StructureMarker,score_structureQueue_min=2] structureQueue 1
+	!getStructureTemplate SmallIsland 1 -48 1 64
+	!getStructureTemplate LargeIsland 2 -48 1 80
+	/scoreboard players reset @e[score_structureQueue_min=1,score_structureQueue=1] structureQueue
+
+	/scoreboard players tag @e[name=CreateStructures,tag=keepLooping] remove keepLooping
+	/testfor @e[name=StructureMarker,score_structureQueue_min=1]
+> $conditionalChain
+	/scoreboard players tag @e[name=CreateStructures] add keepLooping
+>$defaultChain
+	/testfor @e[name=CreateStructures,type=area_effect_cloud,tag=!keepLooping]
+> $conditionalChain
+	!stop_loop CreateStructures

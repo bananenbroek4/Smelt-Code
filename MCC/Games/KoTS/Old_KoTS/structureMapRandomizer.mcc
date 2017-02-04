@@ -1,0 +1,115 @@
+$modulePrefix={"text":"[","color":"red"},{"text":"StructureRandomizer","color":"gold"},{"text":"]: ","color":"red"}
+
+$defaultRepeat={"conditional":false,"type":"repeating","auto":true}
+$defaultChain={"conditional":false,"type":"chain","auto":true}
+$defaultImpulse={"conditional":false,"type":"impulse","auto":true}
+$conditionalRepeat={"conditional":true,"type":"repeating","auto":true}
+$conditionalChain={"conditional":true,"type":"chain","auto":true}
+$conditionalImpulse={"conditional":true,"type":"impulse","auto":true}
+$waitingRepeat={"conditional":false,"type":"repeating","auto":false}
+$waitingImpulse={"conditional":false,"type":"impulse","auto":false}
+$waitingChain={"conditional":false,"type":"chain","auto":false}
+
+$canSeeName=true
+
+$structureMapCenter=-49 -1
+$largeIsland_spreadDistance=7
+$smallIsland_spreadDistance=3
+
+$largeIslandRNGAmount=4 7
+$smallIslandRNGAmount=15 25
+
+# RNG_structures
+!event generateStructureMap
+> $defaultChain
+	/tellraw @p [$modulePrefix,{"text":"Randomizing structure count..."}]
+	/setblock -65 2 -16 redstone_block
+	/setblock -65 2 -16 air
+	/kill @e[type=armor_stand,tag=StructureMapMarker]
+	!rng largeIsland $largeIslandRNGAmount
+	!rng smallIsland $smallIslandRNGAmount
+	!start_loop CMM_LargeIsland
+
+# CreateMapMarkers_LargeIsland
+!loop CMM_LargeIsland
+> $defaultChain
+	/scoreboard players test RNGHolder_largeIsland RNG_Holder 1
+> $conditionalChain
+	/summon armor_stand ~ ~ ~ {CustomName:"Marker_LargeIsland",Small:1,Marker:0,NoGravity:1,Tags:["StructureMapMarker","isListed"],CustomNameVisible:$canSeeName}
+> $defaultChain
+	/scoreboard players remove RNGHolder_largeIsland RNG_Holder 1
+	/scoreboard players test RNGHolder_largeIsland RNG_Holder -10 -1
+> $conditionalChain
+	!start_loop RMM_LargeIsland
+	!stop_loop CMM_LargeIsland
+	/spreadplayers $structureMapCenter $largeIsland_spreadDistance 8 false @e[name=Marker_LargeIsland]
+	/scoreboard players set @e[name=Marker_LargeIsland] mapHeight 0
+
+# RandomizeMapMarkers_LargeIsland
+!loop RMM_LargeIsland
+> $defaultChain
+	!rng markerHeight 3 8
+	!math mapHeight.@r[type=armor_stand,name=Marker_LargeIsland,tag=StructureMapMarker,score_mapHeight=0] = RNG_Holder.RNGHolder_markerHeight
+	/scoreboard players tag @e[name=RandomizeMapMarkers_LargeIsland,type=area_effect_cloud,tag=keepLooping] remove keepLooping
+	/testfor @e[name=Marker_LargeIsland,tag=StructureMapMarker,score_mapHeight=0]
+> $conditionalChain
+	/scoreboard players tag @e[name=RandomizeMapMarkers_LargeIsland,type=area_effect_cloud] add keepLooping
+> $defaultChain
+	/testfor @e[name=RandomizeMapMarkers_LargeIsland,type=area_effect_cloud,tag=!keepLooping]
+> $conditionalChain
+	/execute @e[name=Marker_LargeIsland,tag=StructureMapMarker] ~ ~ ~ /fill ~ 10 ~ ~1 10 ~1 water
+	!stop_loop RMM_LargeIsland
+	!start_loop CMM_SmallIsland
+
+# CreateMapMarkers_SmallIsland
+!loop CMM_SmallIsland
+> $defaultChain
+	/scoreboard players test RNGHolder_smallIsland RNG_Holder 1
+> $conditionalChain
+	/summon armor_stand ~ ~ ~ {CustomName:"Marker_SmallIsland",Small:1,Marker:0,NoGravity:1,Tags:["StructureMapMarker","isListed"],CustomNameVisible:$canSeeName}
+> $defaultChain
+	/scoreboard players remove RNGHolder_smallIsland RNG_Holder 1
+	/scoreboard players test RNGHolder_smallIsland RNG_Holder -10 -1
+> $conditionalChain
+	!start_loop RMM_SmallIsland
+	!stop_loop CMM_SmallIsland
+	/spreadplayers $structureMapCenter $smallIsland_spreadDistance 9 false @e[name=Marker_SmallIsland]
+	/scoreboard players set @e[name=Marker_SmallIsland] mapHeight 0
+
+# RandomizeMapMarkers_SmallIsland
+!loop RMM_SmallIsland
+> $defaultChain
+	!rng markerHeight 1 10
+	!math mapHeight.@r[type=armor_stand,name=Marker_SmallIsland,tag=StructureMapMarker,score_mapHeight=0] = RNG_Holder.RNGHolder_markerHeight
+	/scoreboard players tag @e[name=RandomizeMapMarkers_SmallIsland,type=area_effect_cloud,tag=keepLooping] remove keepLooping
+	/testfor @e[name=Marker_SmallIsland,tag=StructureMapMarker,score_mapHeight=0]
+> $conditionalChain
+	/scoreboard players tag @e[name=RandomizeMapMarkers_SmallIsland,type=area_effect_cloud] add keepLooping
+> $defaultChain
+	/testfor @e[name=RandomizeMapMarkers_SmallIsland,type=area_effect_cloud,tag=!keepLooping]
+> $conditionalChain
+	/execute @e[name=Marker_SmallIsland,tag=StructureMapMarker] ~ ~ ~ /fill ~ 10 ~ ~ 10 ~ water
+	!stop_loop RMM_SmallIsland
+	!start_event SMMH
+
+# SetMapMarkerHeight
+!event SMMH
+> $defaultChain
+	/tp @e[score_mapHeight_min=1,score_mapHeight=1] ~ 1 ~
+	/tp @e[score_mapHeight_min=2,score_mapHeight=2] ~ 2 ~
+	/tp @e[score_mapHeight_min=3,score_mapHeight=3] ~ 3 ~
+	/tp @e[score_mapHeight_min=4,score_mapHeight=4] ~ 4 ~
+	/tp @e[score_mapHeight_min=5,score_mapHeight=5] ~ 5 ~
+	/tp @e[score_mapHeight_min=6,score_mapHeight=6] ~ 6 ~
+	/tp @e[score_mapHeight_min=7,score_mapHeight=7] ~ 7 ~
+	/tp @e[score_mapHeight_min=8,score_mapHeight=8] ~ 8 ~
+	/tp @e[score_mapHeight_min=9,score_mapHeight=9] ~ 9 ~
+	/tp @e[score_mapHeight_min=10,score_mapHeight=10] ~ 10 ~
+
+	/execute @e[name=Marker_LargeIsland,tag=StructureMapMarker] ~ ~ ~ /fill ~ ~ ~ ~1 ~1 ~1 stained_glass 14
+	/execute @e[name=Marker_SmallIsland,tag=StructureMapMarker] ~ ~ ~ /fill ~ ~ ~ ~ ~1 ~ stained_glass 11
+
+	///tp @e[tag=StructureMapMarker] ~ ~0.4 ~
+
+	//Activate StructureMap to MiniMap event / loop
+	!start_event sM_Divide

@@ -1,0 +1,45 @@
+$modulePrefix={"text":"[","color":"red"},{"text":"EZ Smelt","color":"gold"},{"text":"]: ","color":"red"}
+$defaultRepeat={"conditional":false,"type":"repeating","auto":true}
+$defaultChain={"conditional":false,"type":"chain","auto":true}
+$defaultImpulse={"conditional":false,"type":"impulse","auto":true}
+$conditionalRepeat={"conditional":true,"type":"repeating","auto":true}
+$conditionalChain={"conditional":true,"type":"chain","auto":true}
+$conditionalImpulse={"conditional":true,"type":"impulse","auto":true}
+$waitingRepeat={"conditional":false,"type":"repeating","auto":false}
+$waitingImpulse={"conditional":false,"type":"impulse","auto":false}
+
+
+$largeIslandModel_Block=minecraft:dye
+$largeIslandModel_Data=1
+$smallIslandModel_Block=minecraft:dye
+$smallIslandModel_Data=4
+
+# structureMapToMiniMap
+!loop sM_to_mM
+> {"type":"chain"}
+	/scoreboard players tag @r[type=armor_stand,tag=!convertedSM2MM] add chosen_SMM
+
+	!sM2mM -64 1 -16 -34 10 14 		998.5 119 -1.5 1002.5 121 2.5
+
+	/execute @e[type=armor_stand,tag=chosen_SMM,name=Marker_LargeIsland] ~ ~ ~ /scoreboard players tag @e[tag=setPosition] add largeIsland_Marker
+	/execute @e[type=armor_stand,tag=chosen_SMM,name=Marker_SmallIsland] ~ ~ ~ /scoreboard players tag @e[tag=setPosition] add smallIsland_Marker
+	/scoreboard players tag @e[tag=chosen_SMM] add convertedSM2MM
+	/scoreboard players tag @e[tag=chosen_SMM] remove isListed
+	/scoreboard players tag @e[tag=chosen_SMM] remove chosen_SMM
+	/scoreboard players tag @e[tag=setPosition] remove setPosition
+
+	/scoreboard players tag @e[name=structureMapToMiniMap,tag=keepLooping] remove keepLooping
+	/testfor @e[tag=isListed,c=1]
+> $conditionalChain
+	/scoreboard players tag @e[name=structureMapToMiniMap] add keepLooping
+>$defaultChain
+	/testfor @e[name=structureMapToMiniMap,type=area_effect_cloud,tag=!keepLooping]
+> $conditionalChain
+	!stop_loop sM_to_mM
+	!start_event give_MMM_Models
+
+# Give MiniMap Marker Models
+!event give_MMM_Models
+> $defaultChain
+	/replaceitem entity @e[name=MM_Marker,type=armor_stand,tag=largeIsland_Marker] slot.armor.head $largeIslandModel_Block 1 $largeIslandModel_Data
+	/replaceitem entity @e[name=MM_Marker,type=armor_stand,tag=smallIsland_Marker] slot.armor.head $smallIslandModel_Block 1 $smallIslandModel_Data

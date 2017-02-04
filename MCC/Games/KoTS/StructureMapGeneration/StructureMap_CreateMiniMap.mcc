@@ -1,0 +1,33 @@
+> { "moduleStartX": 0, "moduleStartY": 0, "moduleStartZ": 0, "moduleStopX": 32, "moduleStopY": 3, "moduleStopZ": 16, "moduleBorder": 1 }
+
+$largeIslandModel_Block=minecraft:dye
+$largeIslandModel_Data=1
+$smallIslandModel_Block=minecraft:dye
+$smallIslandModel_Data=4
+
+# SM_ConvertToMinimap
+>{"type":"repeating-chain","conditional":false}
+	!loop+ SM_ConvertToMinimap
+	/scoreboard players tag @r[type=area_effect_cloud,tag=SM_ConvertToMM] add chosen_SMM
+
+	!SM_ConvertToMinimap -77 10 -77 -57 20 -57 		-76.5 3.25 -54.5 -72.5 3.75 -50.5
+
+	/execute @e[type=area_effect_cloud,tag=chosen_SMM,name=SM_LI] ~ ~ ~ /scoreboard players tag @e[tag=setPosition] add largeIsland_Marker
+	/execute @e[type=area_effect_cloud,tag=chosen_SMM,name=SM_SI] ~ ~ ~ /scoreboard players tag @e[tag=setPosition] add smallIsland_Marker
+	/scoreboard players tag @e[tag=chosen_SMM] add SM_ConvertToMinimap
+	/scoreboard players tag @e[tag=chosen_SMM] remove isListed
+	/scoreboard players tag @e[tag=chosen_SMM] remove SM_ConvertToMM
+	/scoreboard players tag @e[tag=chosen_SMM] remove chosen_SMM
+	/scoreboard players tag @e[tag=setPosition] remove setPosition
+
+	/testfor @e[tag=isListed]
+	!invertResult
+	>{"conditional":true}
+		!stop_loop+ SM_ConvertToMinimap
+		!start_event+ give_MMM_Models
+
+# Give MiniMap Marker Models
+>{"type":"impulse-chain","conditional":false}
+	!event+ give_MMM_Models
+	/replaceitem entity @e[name=MM_Marker,type=armor_stand,tag=largeIsland_Marker] slot.armor.head $largeIslandModel_Block 1 $largeIslandModel_Data
+	/replaceitem entity @e[name=MM_Marker,type=armor_stand,tag=smallIsland_Marker] slot.armor.head $smallIslandModel_Block 1 $smallIslandModel_Data

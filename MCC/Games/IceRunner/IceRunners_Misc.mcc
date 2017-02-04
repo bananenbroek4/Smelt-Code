@@ -1,0 +1,156 @@
+$defaultRepeat={"conditional":false,"type":"repeating","auto":true,"executeAs":""}
+$defaultChain={"conditional":false,"type":"chain","auto":true,"executeAs":""}
+$defaultImpulse={"conditional":false,"type":"impulse","auto":true,"executeAs":""}
+$conditionalRepeat={"conditional":true,"type":"repeating","auto":true,"executeAs":""}
+$conditionalChain={"conditional":true,"type":"chain","auto":true,"executeAs":""}
+$conditionalImpulse={"conditional":true,"type":"impulse","auto":true,"executeAs":""}
+$waitingRepeat={"conditional":false,"type":"repeating","auto":false,"executeAs":""}
+$waitingImpulse={"conditional":false,"type":"impulse","auto":false,"executeAs":""}
+
+$powerupLength=151
+$powerupDetectAge=150
+
+	/* Misc loops:
+	
+	- Powerup location finder
+
+	*/
+
+# IceRunners_LaunchMiscSystems
+	!event IceRunners_LaunchMiscSystems
+	>$defaultChain
+	!start_loop IceRunners_FindPowerupLocation
+	/summon armor_stand -200 0 3000 {CustomName:"IceRunners_PowerupSearchMarker",NoGravity:1,Small:1,Marker:1,Tags:["IceRunners_SearchForPowerupLocation","IceRunners_Entity"],Invisible:1b}
+
+	!start_loop IceRunners_BlazeTrail
+	!start_loop IceRunners_IceWall
+	!start_loop IceRunners_SnowMine
+	!start_loop IceRunners_IceDecayTrail
+	!start_loop SnowballGrenadeModule
+
+# IceRunners_DeactivateMiscSystems
+	!event IceRunners_DeactivateMiscSystems
+	>$defaultChain
+	!stop_loop IceRunners_FindPowerupLocation
+	/kill @e[tag=IceRunners_Entity]
+	!stop_loop IceRunners_BlazeTrail
+	!stop_loop IceRunners_IceWall
+	!stop_loop IceRunners_SnowMine
+	!stop_loop IceRunners_IceDecayTrail
+	!stop_loop IceRunners_PowerupMarkerEngine
+	!stop_loop SnowballGrenadeModule
+
+
+# IceRunners_FindPowerupLocation
+	!loop IceRunners_FindPowerupLocation
+	>$defaultChain
+	>{"type":"chain","conditional":false,"auto":true}
+	/execute @e[name=IceRunners_PowerupSearchMarker,tag=IceRunners_SearchForPowerupLocation] ~ ~ ~ /spreadplayers -195 2983 5 40 false @e[name=IceRunners_PowerupSearchMarker,tag=IceRunners_SearchForPowerupLocation]
+	/tp @e[name=IceRunners_PowerupSearchMarker,tag=IceRunners_SearchForPowerupLocation] ~ 21 ~
+	/execute @e[name=IceRunners_PowerupSearchMarker,tag=IceRunners_SearchForPowerupLocation] ~ ~ ~ detect ~ 20 ~ frosted_ice * /execute @e[name=IceRunners_PowerupSearchMarker,tag=IceRunners_SearchForPowerupLocation] ~ ~ ~ /testforblock ~ 21 ~ air 0
+	>$conditionalChain
+	>{"type":"chain","conditional":true,"auto":true}
+		/scoreboard players tag @e[name=IceRunners_PowerupSearchMarker,tag=IceRunners_SearchForPowerupLocation] add IceRunners_FoundPowerupLocation
+		/scoreboard players tag @e[name=IceRunners_PowerupSearchMarker,tag=IceRunners_SearchForPowerupLocation] remove IceRunners_SearchForPowerupLocation
+	>$defaultChain
+	>{"executeAs":"@e[name=IceRunners_PowerupSearchMarker,tag=IceRunners_FoundPowerupLocation]"}
+		/kill @e[name=IceRunners_PowerupMarker,tag=IceRunners_RemoveMarker]
+		/summon area_effect_cloud ~ ~ ~ {CustomName:"IceRunners_PowerupMarker",NoGravity:1,Tags:["IceRunners_NotPickedUp","IceRunners_Entity"],Duration:$powerupLength}
+		/summon armor_stand ~ ~-1.3 ~ {CustomName:"IceRunners_PowerupDisplay",Invisible:1b,NoGravity:1,Small:0b,Marker:1,Tags:["IceRunners_Entity"],ArmorItems:[{},{},{},{id:"minecraft:sponge",Count:1}]}
+		/kill @e[name=IceRunners_PowerupSearchMarker]
+		searge
+	>$conditionalChain
+	>{"type":"chain","conditional":true,"auto":true}
+		!stop_loop IceRunners_FindPowerupLocation
+		!start_loop IceRunners_PowerupMarkerEngine
+	>$defaultChain
+	>{"type":"chain","conditional":false,"auto":true}
+
+# IceRunners_PowerupMarkerEngine
+	!loop IceRunners_PowerupMarkerEngine
+	>$defaultChain
+	>{"type":"chain","conditional":false,"auto":true}
+	/effect @e[name=IceRunners_PowerupDisplay] glowing 9999 1 true
+	/execute @e[name=IceRunners_PowerupMarker,tag=!IceRunners_RemoveMarker] ~ ~ ~ detect ~ 20 ~ water * /scoreboard players tag @e[name=IceRunners_PowerupMarker,c=1,r=0] add IceRunners_RemoveMarker
+	/scoreboard players tag @e[name=IceRunners_PowerupMarker,type=area_effect_cloud] add IceRunners_RemoveMarker {Age:$powerupDetectAge}
+	>{"executeAs":"@e[tag=IceRunners_RemoveMarker,name=IceRunners_PowerupMarker]"}
+		/title @a[tag=IceRunners_InGame,m=2] times 0 20 5
+		/execute @e[c=1,r=0,tag=IceRunners_NotPickedUp] ~ ~ ~ /title @a[tag=IceRunners_InGame,m=2] actionbar [{"text":"Present has moved!","color":"green"}]
+		/execute @e[c=1,r=0,tag=IceRunners_PickedUp] ~ ~ ~ /title @a[tag=IceRunners_InGame,m=2] actionbar [{"text":"Present has spawned!","color":"green"}]
+		/kill @e[name=IceRunners_PowerupDisplay]
+		/help
+	>$conditionalChain
+	>{"type":"chain","conditional":true,"auto":true}
+		!start_loop IceRunners_FindPowerupLocation
+		!stop_loop IceRunners_PowerupMarkerEngine
+		/summon armor_stand -200 0 3000 {CustomName:"IceRunners_PowerupSearchMarker",NoGravity:1,Small:1,Marker:1,Invisible:1b,Tags:["IceRunners_SearchForPowerupLocation","IceRunners_Entity"]}
+	>$defaultChain
+	>{"type":"chain","conditional":false,"auto":true}
+	/tp @e[name=IceRunners_PowerupDisplay,type=armor_stand] ~ ~ ~ ~1.5 ~
+
+	/execute @e[name=IceRunners_PowerupMarker,tag=IceRunners_NotPickedUp] ~ ~ ~ /particle fireworksSpark ~ ~2 ~ .3 .3 .3 0 1
+	/execute @e[name=IceRunners_PowerupMarker,type=area_effect_cloud,tag=IceRunners_NotPickedUp] ~ ~-1 ~ /scoreboard players tag @a[tag=IceRunners_InGame,m=2,dy=4] add IceRunners_PickedUpPowerup
+	>$conditionalChain
+	>{"type":"chain","conditional":true,"auto":true}
+		/scoreboard players tag @e[name=IceRunners_PowerupMarker,type=area_effect_cloud] add IceRunners_GotPickedUp
+		/scoreboard players tag @e[name=IceRunners_PowerupMarker,type=area_effect_cloud] remove IceRunners_NotPickedUp
+	>$defaultChain
+	>{"type":"chain","conditional":false,"auto":true}
+	>{"executeAs":"@e[name=IceRunners_PowerupMarker,tag=IceRunners_GotPickedUp]"}
+		/title @a[tag=IceRunners_InGame,m=2] times 0 20 5
+		/title @a[tag=IceRunners_InGame,m=2] actionbar [{"text":"Present picked up by ","color":"green"},{"text":"","color":"yellow"},{"selector":"@a[tag=IceRunners_PickedUpPowerup,m=2]","color":"yellow","bold":true}]
+		/execute @a[tag=IceRunners_PickedUpPowerup,m=2] ~ ~ ~ playsound minecraft:entity.player.levelup ambient @p ~ ~ ~ 0.25 1.5
+		/particle happyVillager ~ ~ ~ .5 .5 .5 0 10 force @a[tag=IceRunners_InGame]
+		/kill @e[name=IceRunners_PowerupDisplay]
+	>$conditionalChain
+	>{"type":"chain","conditional":true,"auto":true}
+		!start_event IceRunners_GivePowerupToPlayer
+		/scoreboard players tag @e[name=IceRunners_PowerupMarker,tag=IceRunners_GotPickedUp] add IceRunners_PickedUp
+		/scoreboard players tag @e[name=IceRunners_PowerupMarker,tag=IceRunners_GotPickedUp] remove IceRunners_GotPickedUp
+	>$defaultChain
+	>{"type":"chain","conditional":false,"auto":true}
+
+		
+# IceRunners_GivePowerupToPlayer
+	!event IceRunners_GivePowerupToPlayer
+	>$defaultChain
+	>{"type":"chain"}
+	!rng IR_PowID 0 5
+	/scoreboard objectives add IceRunners_PowID dummy IceRunners_PowerupID
+	/scoreboard players tag @r[tag=IceRunners_PickedUpPowerup,m=2] add IceRunners_RewardPowerup
+	/scoreboard players tag @e[tag=IceRunners_RewardPowerup] remove IceRunners_PickedUpPowerup
+	/scoreboard players operation @a[tag=IceRunners_RewardPowerup] IceRunners_PowID = RNGIR_PowID RNG_Holder
+
+	/title @a[tag=RewardPowerup] times 5 15 5
+	/give @a[tag=IceRunners_RewardPowerup,m=2,score_IceRunners_PowID_min=0,score_IceRunners_PowID=0] minecraft:golden_boots 1 8 {display:{Name:"Blaze Trail"},Unbreakable:1b}
+	/title @a[tag=IceRunners_RewardPowerup,m=2,score_IceRunners_PowID_min=0,score_IceRunners_PowID=0] subtitle [{"text":"Create a line of fire!","color":"yellow"}]
+	/give @a[tag=IceRunners_RewardPowerup,m=2,score_IceRunners_PowID_min=1,score_IceRunners_PowID=1] minecraft:snowball 1 0 {display:{Name:"Snowball Grenade"}}
+	/title @a[tag=IceRunners_RewardPowerup,m=2,score_IceRunners_PowID_min=1,score_IceRunners_PowID=1] subtitle [{"text":"Snowball Grenades!","color":"yellow"}]
+	/give @a[tag=IceRunners_RewardPowerup,m=2,score_IceRunners_PowID_min=2,score_IceRunners_PowID=2] minecraft:golden_boots 1 7 {display:{Name:"Ice Wall"},Unbreakable:1b}
+	/title @a[tag=IceRunners_RewardPowerup,m=2,score_IceRunners_PowID_min=2,score_IceRunners_PowID=2] subtitle [{"text":"Form a wall of ice!","color":"yellow"}]
+	/give @a[tag=IceRunners_RewardPowerup,m=2,score_IceRunners_PowID_min=3,score_IceRunners_PowID=3] minecraft:golden_boots 1 6 {display:{Name:"Snow Mine"},Unbreakable:1b}
+	/title @a[tag=IceRunners_RewardPowerup,m=2,score_IceRunners_PowID_min=3,score_IceRunners_PowID=3] subtitle [{"text":"Lay down a snow mine!","color":"yellow"}]
+	/give @a[tag=IceRunners_RewardPowerup,m=2,score_IceRunners_PowID_min=4,score_IceRunners_PowID=4] minecraft:golden_hoe 1 100 {display:{Name:"Icy Cane"},ench:[{id:19,lvl:0}]}
+	/title @a[tag=IceRunners_RewardPowerup,m=2,score_IceRunners_PowID_min=4,score_IceRunners_PowID=4] subtitle [{"text":"Knock people off!","color":"yellow"}]
+	/title @a[tag=IceRunners_RewardPowerup] title [{"text":""}]
+
+	/scoreboard players tag @a[tag=IceRunners_RewardPowerup] remove IceRunners_RewardPowerup
+
+# IceRunners_IceDecayTrail
+	!loop IceRunners_IceDecayTrail
+	>{"type":"chain","conditional":false,"auto":true}
+	/execute @a[tag=IceRunners_InGame,m=2] ~ ~ ~ detect ~ ~-1 ~ frosted_ice * /summon area_effect_cloud ~ 0 ~ {CustomName:"IceRunners_IceDecayMarker",Duration:11}
+	/execute @a[tag=IceRunners_InGame,m=2] ~ ~ ~ detect ~ ~-1 ~ frosted_ice * /summon area_effect_cloud ~1 0 ~ {CustomName:"IceRunners_IceDecayMarker",Duration:11}
+	/execute @a[tag=IceRunners_InGame,m=2] ~ ~ ~ detect ~ ~-1 ~ frosted_ice * /summon area_effect_cloud ~1 0 ~1 {CustomName:"IceRunners_IceDecayMarker",Duration:11}
+	/execute @a[tag=IceRunners_InGame,m=2] ~ ~ ~ detect ~ ~-1 ~ frosted_ice * /summon area_effect_cloud ~ 0 ~1 {CustomName:"IceRunners_IceDecayMarker",Duration:11}
+	/execute @a[tag=IceRunners_InGame,m=2] ~ ~ ~ detect ~ ~-1 ~ frosted_ice * /summon area_effect_cloud ~-1 0 ~ {CustomName:"IceRunners_IceDecayMarker",Duration:11}
+	/execute @a[tag=IceRunners_InGame,m=2] ~ ~ ~ detect ~ ~-1 ~ frosted_ice * /summon area_effect_cloud ~-1 0 ~-1 {CustomName:"IceRunners_IceDecayMarker",Duration:11}
+	/execute @a[tag=IceRunners_InGame,m=2] ~ ~ ~ detect ~ ~-1 ~ frosted_ice * /summon area_effect_cloud ~ 0 ~-1 {CustomName:"IceRunners_IceDecayMarker",Duration:11}
+	/execute @a[tag=IceRunners_InGame,m=2] ~ ~ ~ detect ~ ~-1 ~ frosted_ice * /summon area_effect_cloud ~1 0 ~-1 {CustomName:"IceRunners_IceDecayMarker",Duration:11}
+	/execute @a[tag=IceRunners_InGame,m=2] ~ ~ ~ detect ~ ~-1 ~ frosted_ice * /summon area_effect_cloud ~-1 0 ~1 {CustomName:"IceRunners_IceDecayMarker",Duration:11}
+	/scoreboard players tag @e[name=IceRunners_IceDecayMarker,tag=!IceRunners_KillIceDecayMarker] add IceRunners_KillIceDecayMarker {Age:10}
+	/execute @e[name=IceRunners_IceDecayMarker,tag=IceRunners_KillIceDecayMarker] ~ ~ ~ detect ~ 20 ~ frosted_ice age=3 /fill ~ 20 ~ ~ 20 ~ water 0 replace frosted_ice age=3
+	/execute @e[name=IceRunners_IceDecayMarker,tag=IceRunners_KillIceDecayMarker] ~ ~ ~ detect ~ 20 ~ frosted_ice age=2 /fill ~ 20 ~ ~ 20 ~ frosted_ice age=3 replace frosted_ice age=2
+	/execute @e[name=IceRunners_IceDecayMarker,tag=IceRunners_KillIceDecayMarker] ~ ~ ~ detect ~ 20 ~ frosted_ice age=1 /fill ~ 20 ~ ~ 20 ~ frosted_ice age=2 replace frosted_ice age=1
+	/execute @e[name=IceRunners_IceDecayMarker,tag=IceRunners_KillIceDecayMarker] ~ ~ ~ detect ~ 20 ~ frosted_ice age=0 /fill ~ 20 ~ ~ 20 ~ frosted_ice age=1 replace frosted_ice age=0
+	/execute @e[name=IceRunners_IceDecayMarker,tag=IceRunners_KillIceDecayMarker] ~ ~ ~ /kill @e[name=IceRunners_IceDecayMarker,r=1]

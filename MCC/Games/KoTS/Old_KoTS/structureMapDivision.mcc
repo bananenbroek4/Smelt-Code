@@ -1,0 +1,15 @@
+$modulePrefix={"text":"[","color":"red"},{"text":"EZ Smelt","color":"gold"},{"text":"]: ","color":"red"}
+$defaultRepeat={"conditional":false,"type":"repeating","auto":true}
+$defaultChain={"conditional":false,"type":"chain","auto":true}
+$defaultImpulse={"conditional":false,"type":"impulse","auto":true}
+$conditionalRepeat={"conditional":true,"type":"repeating","auto":true}
+$conditionalChain={"conditional":true,"type":"chain","auto":true}
+$conditionalImpulse={"conditional":true,"type":"impulse","auto":true}
+$waitingRepeat={"conditional":false,"type":"repeating","auto":false}
+$waitingImpulse={"conditional":false,"type":"impulse","auto":false}
+
+# structureMapDivision
+!event sM_Divide
+> {"type":"chain"}
+	!sMD -64 1 -16 -34 10 14
+	!start_loop sM_to_mM

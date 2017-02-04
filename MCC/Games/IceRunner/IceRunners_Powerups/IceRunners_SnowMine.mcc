@@ -1,0 +1,65 @@
+> { "moduleStartX": 0, "moduleStartY": 0, "moduleStartZ": 0, "moduleStopX": 15, "moduleStopY": 15, "moduleStopZ": 2, "moduleBorder": 1 }
+
+$defaultRepeat={"conditional":false,"type":"repeating","auto":true}
+$defaultChain={"conditional":false,"type":"chain","auto":true}
+$defaultImpulse={"conditional":false,"type":"impulse","auto":true}
+$conditionalRepeat={"conditional":true,"type":"repeating","auto":true}
+$conditionalChain={"conditional":true,"type":"chain","auto":true}
+$conditionalImpulse={"conditional":true,"type":"impulse","auto":true}
+$waitingRepeat={"conditional":false,"type":"repeating","auto":false}
+$waitingImpulse={"conditional":false,"type":"impulse","auto":false}
+
+# IceRunners_SnowMine
+	!loop IceRunners_SnowMine
+	>{"conditional":false,"type":"chain","auto":true}
+	/execute @a[tag=IceRunners_InGame,m=2] ~ ~ ~ detect ~ 20 ~ frosted_ice * /scoreboard players tag @a[tag=IceRunners_InGame,m=2] add IceRunners_ActivateWeapon_SnowMine {Inventory:[{id:"minecraft:golden_boots",Count:1b,Damage:6s,Slot:100b}]}
+	/replaceitem entity @a[tag=IceRunners_ActivateWeapon_SnowMine] slot.armor.feet minecraft:air
+	>{"executeAs":"@a[tag=IceRunners_ActivateWeapon_SnowMine,m=2]"}
+
+		/detect ~ 20 ~ frosted_ice * /summon armor_stand ~ 18.9 ~ {CustomName:"IceRunners_SnowMine",Marker:1,NoGravity:1,Marker:1b,ArmorItems:[{},{},{},{id:"minecraft:tnt",Count:1b}],Tags:["IceRunners_Entity","IceRunners_SnowMine_Charge"],Invisible:1}
+		/scoreboard players tag @p[] remove IceRunners_ActivateWeapon_SnowMine
+	>{"executeAs":""}
+	/execute @e[name=IceRunners_SnowMine,tag=IceRunners_SnowMine_Charge] ~ ~ ~ /particle smoke ~ ~1.5 ~ 0.2 0.05 0.2 0 1
+	/scoreboard players add @e[name=IceRunners_SnowMine,tag=IceRunners_SnowMine_Charge] dummyCounter 1
+	/execute @e[name=IceRunners_SnowMine,tag=IceRunners_SnowMine_Charge,score_dummyCounter_min=10,score_dummyCounter=10] ~ ~ ~ playsound minecraft:block.note.snare ambient @a ~ ~ ~ 0.25 0.3
+	/execute @e[name=IceRunners_SnowMine,tag=IceRunners_SnowMine_Charge,score_dummyCounter_min=20,score_dummyCounter=20] ~ ~ ~ playsound minecraft:block.note.snare ambient @a ~ ~ ~ 0.25 0.6
+	/execute @e[name=IceRunners_SnowMine,tag=IceRunners_SnowMine_Charge,score_dummyCounter_min=30,score_dummyCounter=30] ~ ~ ~ playsound minecraft:block.note.snare ambient @a ~ ~ ~ 0.25 0.9
+	/execute @e[name=IceRunners_SnowMine,tag=IceRunners_SnowMine_Charge,score_dummyCounter_min=40,score_dummyCounter=40] ~ ~ ~ playsound minecraft:block.note.snare ambient @a ~ ~ ~ 0.25 1.2
+	/execute @e[name=IceRunners_SnowMine,tag=IceRunners_SnowMine_Charge,score_dummyCounter_min=50,score_dummyCounter=50] ~ ~ ~ playsound minecraft:block.note.snare ambient @a ~ ~ ~ 0.25 1.5
+	/execute @e[name=IceRunners_SnowMine,tag=IceRunners_SnowMine_Charge,score_dummyCounter_min=60,score_dummyCounter=60] ~ ~ ~ playsound minecraft:block.note.hat ambient @a ~ ~ ~ 0.5 2
+
+	/scoreboard players tag @e[name=IceRunners_SnowMine,tag=IceRunners_SnowMine_Charge,score_dummyCounter_min=60] add IceRunners_SnowMine_Charged
+	/scoreboard players tag @e[name=IceRunners_SnowMine,tag=IceRunners_SnowMine_Charged] remove IceRunners_SnowMine_Charge
+
+	/execute @e[name=IceRunners_SnowMine,tag=IceRunners_SnowMine_Charged] ~ ~ ~ detect ~ 20 ~ water * /scoreboard players tag @e[c=1,r=0,name=IceRunners_SnowMine,tag=IceRunners_SnowMine_Charged] add IceRunners_SnowMine_Triggered
+
+	/execute @a[tag=IceRunners_InGame,m=2] ~ ~ ~ /scoreboard players tag @e[name=IceRunners_SnowMine,tag=IceRunners_SnowMine_Charged,dy=-3] add IceRunners_SnowMine_Triggered
+	>{"conditional":true}
+		/scoreboard players set @e[name=IceRunners_SnowMine,tag=IceRunners_SnowMine_Triggered,score_dummyCounter_min=60] dummyCounter 0
+	>{"conditional":false}
+	>{"executeAs":"@e[name=IceRunners_SnowMine,tag=IceRunners_SnowMine_Triggered]"}
+		/scoreboard players add @e[c=1,r=0,tag=IceRunners_SnowMine_Triggered] dummyCounter 1
+		/execute @e[c=1,r=0,score_dummyCounter=5,score_dummyCounter_min=5] ~ ~ ~ /fill ~-2 21 ~-2 ~2 21 ~2 air 0 replace dark_oak_fence *
+		/execute @e[c=1,r=0,score_dummyCounter=5,score_dummyCounter_min=5] ~ ~ ~ /fill ~-2 20 ~-2 ~2 20 ~2 air 0 replace spruce_fence *
+		/execute @e[c=1,r=0,score_dummyCounter=5,score_dummyCounter_min=5] ~ ~ ~ /fill ~-2 20 ~-2 ~2 20 ~2 water 0 replace frosted_ice 3
+		/execute @e[c=1,r=0,score_dummyCounter=5,score_dummyCounter_min=5] ~ ~ ~ /fill ~-2 20 ~-2 ~2 20 ~2 frosted_ice 3 replace frosted_ice 2
+		/execute @e[c=1,r=0,score_dummyCounter=5,score_dummyCounter_min=5] ~ ~ ~ /fill ~-2 20 ~-2 ~2 20 ~2 frosted_ice 2 replace frosted_ice 1
+		/execute @e[c=1,r=0,score_dummyCounter=5,score_dummyCounter_min=5] ~ ~ ~ /fill ~-2 20 ~-2 ~2 20 ~2 frosted_ice 1 replace frosted_ice 0
+		/execute @e[c=1,r=0,score_dummyCounter=5,score_dummyCounter_min=5] ~ ~ ~ /playsound minecraft:block.glass.break ambient @a ~ ~ ~ 0.5 1
+		/execute @e[c=1,r=0,score_dummyCounter=10,score_dummyCounter_min=10] ~ ~ ~ /fill ~-2 20 ~-2 ~2 20 ~2 water 0 replace frosted_ice 3
+		/execute @e[c=1,r=0,score_dummyCounter=10,score_dummyCounter_min=10] ~ ~ ~ /fill ~-2 20 ~-2 ~2 20 ~2 frosted_ice 3 replace frosted_ice 2
+		/execute @e[c=1,r=0,score_dummyCounter=10,score_dummyCounter_min=10] ~ ~ ~ /fill ~-2 20 ~-2 ~2 20 ~2 frosted_ice 2 replace frosted_ice 1
+		/execute @e[c=1,r=0,score_dummyCounter=10,score_dummyCounter_min=10] ~ ~ ~ /playsound minecraft:block.glass.break ambient @a ~ ~ ~ 0.5 1.5
+		/execute @e[c=1,r=0,score_dummyCounter=15,score_dummyCounter_min=15] ~ ~ ~ /fill ~-2 20 ~-2 ~2 20 ~2 water 0 replace frosted_ice 3
+		/execute @e[c=1,r=0,score_dummyCounter=15,score_dummyCounter_min=15] ~ ~ ~ /fill ~-2 20 ~-2 ~2 20 ~2 frosted_ice 3 replace frosted_ice 2
+		/execute @e[c=1,r=0,score_dummyCounter=15,score_dummyCounter_min=15] ~ ~ ~ /playsound minecraft:block.glass.break ambient @a ~ ~ ~ 0.5 2
+		/execute @e[c=1,r=0,score_dummyCounter=20,score_dummyCounter_min=20] ~ ~ ~ /fill ~-2 20 ~-2 ~2 20 ~2 water 0 replace frosted_ice 3
+		/execute @e[c=1,r=0,score_dummyCounter=20,score_dummyCounter_min=20] ~ ~ ~ /playsound minecraft:block.glass.break ambient @a ~ ~ ~ 0.5 2
+		/kill @e[c=1,r=0,score_dummyCounter_min=20]
+	>{"executeAs":""}
+
+	/scoreboard players tag @a[tag=IceRunners_InGame] remove IceRunners_HoldCane
+	/scoreboard players tag @a[tag=IceRunners_InGame] add IceRunners_HoldCane {SelectedItem:{id:"minecraft:golden_hoe"}}
+
+	/execute @a[tag=!IceRunners_HoldCane] ~ ~ ~ /effect @a[m=2,tag=IceRunners_InGame,c=1,r=0] weakness 1 100 true
+	/effect @a[m=2,tag=IceRunners_HoldCane] weakness 0

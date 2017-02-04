@@ -1,0 +1,50 @@
+> { "moduleStartX": 0, "moduleStartY": 0, "moduleStartZ": 0, "moduleStopX": 15, "moduleStopY": 15, "moduleStopZ": 2, "moduleBorder": 1 }
+
+$defaultRepeat={"conditional":false,"type":"repeating","auto":true}
+$defaultChain={"conditional":false,"type":"chain","auto":true}
+$defaultImpulse={"conditional":false,"type":"impulse","auto":true}
+$conditionalRepeat={"conditional":true,"type":"repeating","auto":true}
+$conditionalChain={"conditional":true,"type":"chain","auto":true}
+$conditionalImpulse={"conditional":true,"type":"impulse","auto":true}
+$waitingRepeat={"conditional":false,"type":"repeating","auto":false}
+$waitingImpulse={"conditional":false,"type":"impulse","auto":false}
+
+$IceRunners_BlazeTrail_BoatPassenger=id:"area_effect_cloud",Duration:2147483647,Tags:["IceRunners_Entity","IceRunners_BlazeTrail"]
+
+# IceRunners_BlazeTrail
+	!loop IceRunners_BlazeTrail
+	>{"conditional":false,"type":"chain","auto":true}
+	/scoreboard players tag @a[tag=IceRunners_InGame] add IceRunners_ActivateWeapon_BlazeTrail {Inventory:[{id:"minecraft:golden_boots",Count:1b,Damage:8s,Slot:100b}]}
+	>{"conditional":true}
+	/replaceitem entity @a[tag=IceRunners_ActivateWeapon_BlazeTrail] slot.armor.feet minecraft:air
+	>{"conditional":false}
+
+	/execute @a[tag=IceRunners_ActivateWeapon_BlazeTrail] ~ ~ ~ /summon boat ~ 0 ~ {CustomName:"IceRunners_BlazeTrail_TranslationalBoat",Tags:["IceRunners_Entity","IceRunners_BlazeTrail"],NoGravity:1,Passengers:[{$IceRunners_BlazeTrail_BoatPassenger,CustomName:"IceRunners_BlazeTrail_BackPassenger"},{$IceRunners_BlazeTrail_BoatPassenger,CustomName:"IceRunners_BlazeTrail_FrontPassenger"}]}
+	/execute @a[tag=IceRunners_ActivateWeapon_BlazeTrail] ~ ~ ~ /teleport @e[name=IceRunners_BlazeTrail_TranslationalBoat,type=boat,dy=-200] ~ 0 ~ ~180 ~
+	/execute @e[name=IceRunners_BlazeTrail_FrontPassenger] ~ ~ ~ /teleport @e[name=IceRunners_BlazeTrail_TranslationalBoat,c=1,r=2] ~ ~ ~
+	/scoreboard players tag @a[tag=IceRunners_ActivateWeapon_BlazeTrail] remove IceRunners_ActivateWeapon_BlazeTrail
+
+	/execute @e[name=IceRunners_BlazeTrail_FrontPassenger] ~ ~ ~ /teleport @e[name=IceRunners_BlazeTrail_TranslationalBoat,c=1,r=3] ~ ~0.08 ~
+	/execute @e[name=IceRunners_BlazeTrail_TranslationalBoat] ~ ~ ~ /particle flame ~ 20.9 ~ 0.2 0.01 0.2 0 3 force
+
+	/scoreboard players add @e[tag=IceRunners_BlazeTrail] LifeTimer 1
+	/scoreboard players tag @e[name=IceRunners_BlazeTrail_FrontPassenger,tag=IceRunners_BlazeTrail_InAir] remove IceRunners_BlazeTrail_InAir
+	/scoreboard players tag @e[name=IceRunners_BlazeTrail_FrontPassenger,tag=IceRunners_BlazeTrail_OnAir] remove IceRunners_BlazeTrail_OnAir
+	/execute @e[name=IceRunners_BlazeTrail_FrontPassenger,type=area_effect_cloud] ~ ~ ~ detect ~ 21 ~ air * /scoreboard players tag @e[c=1,r=1,name=IceRunners_BlazeTrail_FrontPassenger] add IceRunners_BlazeTrail_InAir
+	/execute @e[name=IceRunners_BlazeTrail_FrontPassenger,type=area_effect_cloud] ~ ~ ~ detect ~ 20 ~ air * /scoreboard players tag @e[c=1,r=1,name=IceRunners_BlazeTrail_FrontPassenger] add IceRunners_BlazeTrail_OnAir
+	/execute @e[name=IceRunners_BlazeTrail_FrontPassenger,type=area_effect_cloud] ~ ~ ~ detect ~ 20 ~ water * /scoreboard players tag @e[c=1,r=1,name=IceRunners_BlazeTrail_FrontPassenger] add IceRunners_BlazeTrail_OnAir
+	/execute @e[name=IceRunners_BlazeTrail_FrontPassenger,tag=!IceRunners_BlazeTrail_InAir] ~ ~ ~ /scoreboard players set @e[r=2,tag=IceRunners_BlazeTrail] LifeTimer 200
+	/execute @e[name=IceRunners_BlazeTrail_FrontPassenger,tag=IceRunners_BlazeTrail_OnAir] ~ ~ ~ /scoreboard players set @e[r=2,tag=IceRunners_BlazeTrail] LifeTimer 200
+
+	/execute @e[name=IceRunners_BlazeTrail_TranslationalBoat,score_LifeTimer_min=10] ~ ~ ~ /summon area_effect_cloud ~ 20 ~ {CustomName:"IceRunners_BlazeTrail_TrailMarkers",Duration:5}
+	/scoreboard players tag @e[name=IceRunners_BlazeTrail_TrailMarkers] add Stage1 {Age:4}
+
+	/execute @e[name=IceRunners_BlazeTrail_TrailMarkers,tag=Stage1] ~ ~ ~ /fill ~1 20 ~ ~-1 20 ~ water 0 replace frosted_ice *
+	/execute @e[name=IceRunners_BlazeTrail_TrailMarkers,tag=Stage1] ~ ~ ~ /fill ~ 20 ~1 ~ 20 ~-1 water 0 replace frosted_ice *
+	/execute @e[name=IceRunners_BlazeTrail_TrailMarkers,tag=Stage1] ~ ~ ~ detect ~1 20 ~ water * /fill ~1 21 ~ ~1 22 ~ air 0
+	/execute @e[name=IceRunners_BlazeTrail_TrailMarkers,tag=Stage1] ~ ~ ~ detect ~ 20 ~1 water * /fill ~ 21 ~1 ~ 22 ~1 air 0
+	/execute @e[name=IceRunners_BlazeTrail_TrailMarkers,tag=Stage1] ~ ~ ~ detect ~-1 20 ~ water * /fill ~-1 21 ~ ~-1 36 ~ air 0
+	/execute @e[name=IceRunners_BlazeTrail_TrailMarkers,tag=Stage1] ~ ~ ~ detect ~ 20 ~-1 water * /fill ~ 21 ~-1 ~ 22 ~-1 air 0
+	/execute @e[name=IceRunners_BlazeTrail_TrailMarkers,tag=Stage1] ~ ~ ~ detect ~ 20 water * /fill ~ 21 ~ ~ 22 ~ air 0
+
+	/kill @e[tag=IceRunners_BlazeTrail,score_LifeTimer_min=200]

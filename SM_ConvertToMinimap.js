@@ -53,7 +53,7 @@ sM2mM.Execute = function(smelt)
 		{
 			var MM_currentX = MM_currentX - -MM_xScaleDivision;
 		}
-		smelt.addCommandBlock(util.format("/execute @e[tag=chosen_SMM,type=armor_stand,score_xPos_min=%d,score_xPos=%d] ~ ~ ~ /summon armor_stand %s %s %s {CustomName:\"MM_Marker\",CustomNameVisible:0,Tags:[\"MM_Marker\",\"setPosition\",\"identify_MMMarker\"],Marker:1,Small:1,NoGravity:1,Invisible:1,Silent:1b}", i, i, MM_currentX, MM_currentY, MM_currentZ));
+		smelt.addCommandBlock(util.format("/execute @e[tag=chosen_SMM,type=area_effect_cloud,score_SM_X_min=%d,score_SM_X=%d] ~ ~ ~ /summon armor_stand %s %s %s {CustomName:\"MM_Marker\",CustomNameVisible:0,Tags:[\"MM_Marker\",\"setPosition\",\"identify_MMMarker\"],Marker:1,Small:1,NoGravity:1,Invisible:1,Silent:1b}", i, i, MM_currentX, MM_currentY, MM_currentZ));
 	}
 	
 	var MM_currentX = smelt.args[6];
@@ -65,7 +65,7 @@ sM2mM.Execute = function(smelt)
 		{
 			var MM_currentY = MM_currentY - -MM_yScaleDivision;
 		}
-		smelt.addCommandBlock(util.format("/execute @e[tag=chosen_SMM,type=armor_stand,score_yPos_min=%d,score_yPos=%d] ~ ~ ~ /tp @e[type=armor_stand,name=MM_Marker,tag=setPosition] ~ %s ~", i, i, MM_currentY));
+		smelt.addCommandBlock(util.format("/execute @e[tag=chosen_SMM,type=area_effect_cloud,score_SM_Height_min=%d,score_SM_Height=%d] ~ ~ ~ /tp @e[type=armor_stand,name=MM_Marker,tag=setPosition] ~ %s ~", i, i, MM_currentY));
 	}
 
 	var MM_currentY = smelt.args[7];
@@ -77,7 +77,7 @@ sM2mM.Execute = function(smelt)
 		{
 			var MM_currentZ = MM_currentZ - -MM_zScaleDivision;
 		}
-		smelt.addCommandBlock(util.format("/execute @e[tag=chosen_SMM,type=armor_stand,score_zPos_min=%d,score_zPos=%d] ~ ~ ~ /tp @e[type=armor_stand,name=MM_Marker,tag=setPosition] ~ ~ %s", i, i, MM_currentZ));
+		smelt.addCommandBlock(util.format("/execute @e[tag=chosen_SMM,type=area_effect_cloud,score_SM_Z_min=%d,score_SM_Z=%d] ~ ~ ~ /tp @e[type=armor_stand,name=MM_Marker,tag=setPosition] ~ ~ %s", i, i, MM_currentZ));
 	}
 
 	var MM_currentZ = smelt.args[8];

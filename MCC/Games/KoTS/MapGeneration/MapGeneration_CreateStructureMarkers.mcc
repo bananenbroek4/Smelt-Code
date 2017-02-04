@@ -1,0 +1,23 @@
+> { "moduleStartX": 0, "moduleStartY": 0, "moduleStartZ": 0, "moduleStopX": 32, "moduleStopY": 3, "moduleStopZ": 16, "moduleBorder": 1 }
+
+
+# MG_RemoveOldStructures
+>{"type":"impulse-chain","conditional":false}
+	!event+ MG_RemoveOldStructures
+	
+	/execute @e[name=MG_Marker] ~ ~ ~ /fill ~ ~ ~ ~31 ~31 ~31 air 0
+	/kill @e[name=MG_Marker]
+	/scoreboard players tag @e[tag=SM_StructureMarker] add GM_SpawnMarker
+
+	!start_loop+ MG_CreateStructureMarkers
+
+# MG_CreateStructureMarkers
+>{"type":"impulse-chain","conditional":false}
+	!loop+ MG_CreateStructureMarkers
+	!GM_SpawnStructureMarkers 62 62
+
+	/testfor @e[tag=GM_SpawnMarker,type=area_effect_cloud]
+	!invertResult
+	>{"conditional":true}
+		!stop_loop+ MG_CreateStructureMarkers
+		/execute @e[name=MG_Marker] ~ ~ ~ /setblock ~ ~ ~ stained_glass 14

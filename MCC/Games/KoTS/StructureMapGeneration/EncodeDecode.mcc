@@ -1,0 +1,12 @@
+> { "moduleStartX": 0, "moduleStartY": 0, "moduleStartZ": 0, "moduleStopX": 15, "moduleStopY": 31, "moduleStopZ": 4, "moduleBorder": 1 }
+
+# decodeSector
+>{"type":"impulse-chain","auto":true}
+	!event+ SM_decodeSector
+	!decodeSector 5 5 -77 -55
+
+# encodeSector
+>{"type":"impulse-chain","auto":true}
+	!event+ SM_encodeSector
+	!encodeSector 5 5 -77 -55
+	/say Encode

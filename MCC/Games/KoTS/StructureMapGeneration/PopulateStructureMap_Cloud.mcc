@@ -1,0 +1,66 @@
+> { "moduleStartX": 0, "moduleStartY": 0, "moduleStartZ": 0, "moduleStopX": 32, "moduleStopY": 3, "moduleStopZ": 16, "moduleBorder": 1 }
+
+# INIT_SM_Generation_Cloud
+>{"type":"impulse-chain","conditional":false}
+!event+ INIT_SM_Generation_Cloud
+	/scoreboard players reset * dummyValue
+	/scoreboard players set SM_Amount_C CONST 20
+	/scoreboard players set @e[tag=SM_Marker] successCount 0
+	/scoreboard players set @e[name=SM_SectorPart] dummyValue 2
+	/scoreboard players set @e[name=SM_Sector] dummyValue 5
+	/scoreboard players tag @e[name=SM_Sector] add SM_Sector_CanBeSelected
+	/fill -78 25 -78 -56 25 -56 stained_glass 0 replace stained_glass color=orange
+	/searge
+	!start_event+ SM_Generation_Cloud_AsCgnSector
+
+
+
+# SM_Generation_Cloud
+>{"type":"impulse-chain","conditional":false}
+!event+ SM_Generation_Cloud_AsCgnSector
+	/scoreboard players tag @e[tag=SM_Sector_Selected] remove SM_Sector_Selected
+	/scoreboard players test SM_Amount_C CONST 1
+	>{"conditional":true}
+		/scoreboard players tag @r[type=area_effect_cloud,name=SM_Sector,tag=SM_Sector_CanBeSelected,score_dummyValue_min=1] add SM_Sector_Selected
+	>{"conditional":false}
+	/execute @e[tag=SM_Sector_Selected] ~ ~ ~ clone ~ 8 ~ ~ 8 ~ -79 4 -79
+	/scoreboard players set @e[name=SM_SectorPart] successCount 0
+	/stats entity @e[name=SM_SectorPart] set SuccessCount @e[c=1,r=1,name=SM_SectorPart] successCount
+	/execute @e[name=SM_SectorPart,score_dummyValue_min=1] ~ ~ ~ /testforblocks ~ 8 ~ ~ 8 ~ -79 4 -79
+	/stats entity @e[name=SM_SectorPart] clear SuccessCount
+	/scoreboard players tag @e[tag=SM_SectorPart_Selected] remove SM_SectorPart_Selected
+	/scoreboard players tag @r[type=area_effect_cloud,name=SM_SectorPart,score_successCount_min=1,score_dummyValue_min=1] add SM_SectorPart_Selected
+
+	/scoreboard players test SM_Amount_C CONST 0 0
+	>{"conditional":true}
+		!start_event+ SM_Generation_AssignHeight
+	>{"conditional":false}
+
+	/scoreboard players test SM_Amount_C CONST 1
+	>{"conditional":true}
+		/testfor @e[name=SM_Sector,tag=SM_Sector_Selected]
+		!start_event+ SM_Generation_Cloud
+	>{"conditional":false}
+
+
+# SM_Generation_Cloud
+>{"type":"impulse-chain","conditional":false}
+!event+ SM_Generation_Cloud
+	!spawnScanners -2 -2 2 2 25 @e[name=SM_SectorPart,tag=SM_SectorPart_Selected] {CustomName:"SM_C_Scanner",Duration:1}
+	//execute @e[name=SM_C_Scanner] ~ ~ ~ detect ~ 4 ~ stone 6 /setblock ~ 25 ~ stained_glass 15
+	/scoreboard players set @e[name=SM_C_Scanner] successCount 0
+	/stats entity @e[name=SM_C_Scanner,type=area_effect_cloud] set SuccessCount @e[c=1,dx=0] successCount
+	/execute @e[name=SM_C_Scanner] ~ ~ ~ /testforblocks ~ 25 ~ ~ 25 ~ -79 5 -79
+	/stats entity @e[name=SM_C_Scanner] clear SuccessCount
+	/scoreboard players tag @r[type=area_effect_cloud,name=SM_C_Scanner,score_successCount_min=1] add SM_C_Scanner_Selected
+	/execute @e[name=SM_C_Scanner,tag=SM_C_Scanner_Selected] ~ ~ ~ /summon area_effect_cloud ~ 25 ~ {CustomName:"SM_C",Tags:["SM_Marker","SM_StructureMarker"],Duration:2147483647}
+	/execute @e[name=SM_C_Scanner,tag=SM_C_Scanner_Selected] ~ ~ ~ /fill ~ 25 ~ ~ 25 ~ stained_glass color=magenta replace stained_glass color=white
+	/execute @e[name=SM_C_Scanner,tag=SM_C_Scanner_Selected] ~ ~ ~ /fill ~-1 25 ~-1 ~1 25 ~1 stained_glass color=orange replace stained_glass color=white
+	/kill @e[name=SM_C_Scanner,type=area_effect_cloud]
+	>{"conditional":true}
+		/scoreboard players remove SM_Amount_C CONST 1
+	>{"conditional":false}
+	/scoreboard players remove @e[tag=SM_Sector_Selected] dummyValue 1
+	/scoreboard players remove @e[name=SM_SectorPart,tag=SM_SectorPart_Selected] dummyValue 1
+	/searge
+	!start_event+ SM_Generation_Cloud_AsCgnSector
